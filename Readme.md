@@ -21,6 +21,6 @@ This is a work-in-progress project. (WIP)
 4. Shutdown the cluster: `docker-compose -f spark-client-docker-compose.yml down -v`
 
 ## Web Tools
-namenode -> http://localhost:9870
-spark history -> http://localhost:18080
-hadoop history -> http://localhost:8188
+* namenode -> http://localhost:9870
+* spark history -> http://localhost:18080
+* hadoop history -> http://localhost:8188
