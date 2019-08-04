@@ -1,10 +1,12 @@
 version: "3.7"
 
 services:
-  spark:
-    build: spark
+  spark-client:
+    build: spark-client
     environment:
       SERVICE_PRECONDITION: "resourcemanager:8088"
+    ports:
+      - 18080:18080
     networks:
       - yarn_net
     env_file:
@@ -26,7 +28,6 @@ services:
 
   nodemanager:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.1.1-java8
-    # container_name: nodemanager
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
     networks:
@@ -36,7 +37,6 @@ services:
 
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.1.1-java8
-    # container_name: namenode
     ports:
       - 9870:9870
     expose:
@@ -52,7 +52,6 @@ services:
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.1.1-java8
-    # container_name: datanode
     expose:
       - 9864
     volumes:
@@ -66,7 +65,6 @@ services:
 
   historyserver:
     image: bde2020/hadoop-historyserver:2.0.0-hadoop3.1.1-java8
-    # container_name: historyserver
     ports:
       - 8188:8188
     environment:
