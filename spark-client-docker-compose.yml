@@ -1,0 +1,87 @@
+version: "3.7"
+
+services:
+  spark:
+    build: spark
+    environment:
+      SERVICE_PRECONDITION: "resourcemanager:8088"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.1.1-java8
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
+    expose:
+      - 8088
+      - 8032
+      - 8030
+      - 8031
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  nodemanager:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.1.1-java8
+    # container_name: nodemanager
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.1.1-java8
+    # container_name: namenode
+    ports:
+      - 9870:9870
+    expose:
+      - 9000
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.1.1-java8
+    # container_name: datanode
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  historyserver:
+    image: bde2020/hadoop-historyserver:2.0.0-hadoop3.1.1-java8
+    # container_name: historyserver
+    ports:
+      - 8188:8188
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+    volumes:
+      - hadoop_historyserver:/hadoop/yarn/timeline
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+volumes:
+  hadoop_namenode:
+  hadoop_datanode:
+  hadoop_historyserver:
+
+networks:
+  yarn_net:
