@@ -1,4 +1,4 @@
-FROM bde2020/hadoop-base:2.0.0-hadoop3.1.1-java8
+FROM bde2020/spark-master:2.4.3-hadoop2.7
 
 RUN apk add --no-cache perl
 
