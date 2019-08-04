@@ -18,8 +18,12 @@ RUN wget http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPA
 
 RUN mkdir /tmp/spark-events && echo '\
 spark.eventLog.enabled          true \n\
-spark.eventLog.dir              /tmp/spark-events \n\
-spark.history.fs.logDirectory   /tmp/spark-events \n\
+spark.eventLog.dir              hdfs:///spark-history \n\
+spark.history.fs.logDirectory   hdfs:///spark-history \n\
+spark.yarn.historyServer.address 0.0.0.0:18080 \n\
+spark.history.ui.port 18080 \n\
 spark.hadoop.yarn.timeline-service.enabled false' > /opt/spark/conf/spark-defaults.conf
+
+ADD setup-history-server.sh /usr/local/bin
 
 WORKDIR "/opt/spark"

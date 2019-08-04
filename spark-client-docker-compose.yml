@@ -7,6 +7,7 @@ services:
       SERVICE_PRECONDITION: "resourcemanager:8088"
     ports:
       - 18080:18080
+    command: exit
     networks:
       - yarn_net
     env_file:
