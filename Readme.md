@@ -15,7 +15,12 @@ This is a work-in-progress project. (WIP)
 ## 2. Test Spark+Yarn in client mode with SparkPi
 
 0. First run the cluster: `docker-compose -f spark-client-docker-compose.yml up -d --build`
-1. Then go into the spark container: `docker-compose -f spark-client-docker-compose.yml run spark-client bash`
+1. Then go into the spark container: `docker-compose -f spark-client-docker-compose.yml run -p 18080:18080 spark-client bash`
 2. Start the history server: `/opt/spark/sbin/start-history-server.sh`
 3. Run the SparkPi application on the yarn cluster: `./bin/spark-submit --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode cluster examples/jars/spark-examples*.jar 3` and see run history on http://localhost:18080
 4. Shutdown the cluster: `docker-compose -f spark-client-docker-compose.yml down -v`
+
+## Web Tools
+namenode -> http://localhost:9870
+spark history -> http://localhost:18080
+hadoop history -> http://localhost:8188
