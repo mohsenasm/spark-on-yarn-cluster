@@ -17,6 +17,7 @@ RUN wget http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPA
     echo "export SPARK_HOME=/opt/spark" >> /root/.bashrc
 
 RUN mkdir /tmp/spark-events && echo '\
+spark.executor.memory           4g \n\
 spark.eventLog.enabled          true \n\
 spark.eventLog.dir              hdfs:///spark-history \n\
 spark.history.fs.logDirectory   hdfs:///spark-history \n\

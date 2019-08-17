@@ -5,8 +5,8 @@ services:
     build: spark-client
     environment:
       SERVICE_PRECONDITION: "resourcemanager:8088"
-    ports:
-      - 18080:18080
+    # ports:
+    #   - 18080:18080
     command: exit
     networks:
       - yarn_net
@@ -31,6 +31,8 @@ services:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.1.1-java8
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+    expose:
+      - "1000-65535"
     networks:
       - yarn_net
     env_file:
