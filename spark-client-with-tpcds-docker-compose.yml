@@ -3,6 +3,8 @@ version: "3"
 services:
   tpc-ds:
     build: tpc-ds
+    environment:
+      data_path: "hdfs:///tpc-ds-files/data"
     command: /run.sh exit
     networks:
       - yarn_net

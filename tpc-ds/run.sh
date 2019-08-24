@@ -13,6 +13,9 @@ case "$1" in
   "gen_queries")
     mkdir -p /tpc-ds-files/query && cd tools && ./dsqgen -DIRECTORY ../query_templates -INPUT ../query_templates/templates.lst -SCALE ${2:-1} -VERBOSE Y -QUALIFY Y -OUTPUT_DIR /tpc-ds-files/query
     ;;
+  "gen_ddl")
+    mkdir -p /tpc-ds-files/ddl && cd tools && python3 /opt/gen_ddl.py tpcds.sql /tpc-ds-files/ddl/tpcds.sql
+    ;;
   *)
     echo "args parsing error."
     exit 1
