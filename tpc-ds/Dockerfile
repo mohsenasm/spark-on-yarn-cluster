@@ -16,6 +16,9 @@ COPY tpcds-kit /tpcds-kit
 WORKDIR /tpcds-kit
 RUN cd /tpcds-kit/tools && make OS=LINUX
 
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    nano less && rm -rf /var/lib/apt/lists/*
+
 COPY gen_ddl.py /opt/gen_ddl.py
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
