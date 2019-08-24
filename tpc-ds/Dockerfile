@@ -16,5 +16,6 @@ COPY tpcds-kit /tpcds-kit
 WORKDIR /tpcds-kit
 RUN cd /tpcds-kit/tools && make OS=LINUX
 
+COPY gen_ddl.py /opt/gen_ddl.py
 COPY run.sh /run.sh
 RUN chmod +x /run.sh

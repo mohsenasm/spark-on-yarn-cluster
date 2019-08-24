@@ -27,45 +27,12 @@ This is a work-in-progress project. (WIP)
 1. Then go into the tpc-ds container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh bash`
   + /run.sh gen_data
   + /run.sh gen_queries
+  + /run.sh gen_ddl
 2. Then go into the spark container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
-3. Start the history server: `setup-history-server.sh`
-<!-- 4. Get TPC-DS Files (skip this step if already created)
-```
-apt-get update && apt-get install -y gcc make flex bison byacc git
-git clone https://github.com/gregrahn/tpcds-kit.git
-cd tpcds-kit/tools
-make OS=LINUX
-mkdir -p /tpc-ds-data
-./dsdgen -SCALE 1 -DIR /tpc-ds-data
-mkdir -p /tpc-ds-query
-./dsqgen -DIRECTORY ../query_templates -INPUT ../query_templates/templates.lst -SCALE 1 -VERBOSE Y -QUALIFY Y -OUTPUT_DIR /tpc-ds-query
-``` -->
-4. Create Tables
-```
-cd tpcds-kit/tools/
-spark-sql --master yarn --deploy-mode client -f tpcds.sql
-```
-5. to be continued! ...
-<!-- *put data on HDFS
-run this for each table:
-```
-drop table if exists reason_text;
-create table reason_text
-(
-    r_reason_sk               int,
-    r_reason_id               string,
-    r_reason_desc             string
-)
-USING csv
-OPTIONS(header "false", delimiter "|", path "hdfs:///in/reason.dat")
-;
-drop table if exists reason;
-create table reason
-using parquet
-as (select * from reason_text)
-;
-drop table if exists reason_text;
-```* -->
+  + Start the history server: `setup-history-server.sh`
+  + Copy data to hdfs: `hdfs dfs -mkdir -p /tpc-ds-files/ && hdfs dfs -copyFromLocal /tpc-ds-files/data /tpc-ds-files/`
+  + Create Tables `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
+  + Run Queries! (TODO!)
 6. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools
