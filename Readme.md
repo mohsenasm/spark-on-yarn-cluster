@@ -23,10 +23,13 @@ This is a work-in-progress project. (WIP)
 
 ## 3. Run TPC-DS on Spark+Yarn in client mode
 
-0. First run the cluster: `docker-compose -f spark-client-docker-compose.yml up -d --build`
-1. Then go into the spark container: `docker-compose -f spark-client-docker-compose.yml run -p 18080:18080 -v /home/ubuntu/tpcds-kit:/opt/spark/tpcds-kit spark-client bash`
-2. Start the history server: `setup-history-server.sh`
-3. Get TPC-DS Files (skip this step if already created)
+0. First run the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build`
+1. Then go into the tpc-ds container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh bash`
+  + /run.sh gen_data
+  + /run.sh gen_queries
+2. Then go into the spark container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
+3. Start the history server: `setup-history-server.sh`
+<!-- 4. Get TPC-DS Files (skip this step if already created)
 ```
 apt-get update && apt-get install -y gcc make flex bison byacc git
 git clone https://github.com/gregrahn/tpcds-kit.git
@@ -36,14 +39,34 @@ mkdir -p /tpc-ds-data
 ./dsdgen -SCALE 1 -DIR /tpc-ds-data
 mkdir -p /tpc-ds-query
 ./dsqgen -DIRECTORY ../query_templates -INPUT ../query_templates/templates.lst -SCALE 1 -VERBOSE Y -QUALIFY Y -OUTPUT_DIR /tpc-ds-query
-```
+``` -->
 4. Create Tables
 ```
 cd tpcds-kit/tools/
 spark-sql --master yarn --deploy-mode client -f tpcds.sql
 ```
 5. to be continued! ...
-6. Remove the cluster: `docker-compose -f spark-client-docker-compose.yml down -v`
+<!-- *put data on HDFS
+run this for each table:
+```
+drop table if exists reason_text;
+create table reason_text
+(
+    r_reason_sk               int,
+    r_reason_id               string,
+    r_reason_desc             string
+)
+USING csv
+OPTIONS(header "false", delimiter "|", path "hdfs:///in/reason.dat")
+;
+drop table if exists reason;
+create table reason
+using parquet
+as (select * from reason_text)
+;
+drop table if exists reason_text;
+```* -->
+6. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools
 * namenode -> http://localhost:9870
