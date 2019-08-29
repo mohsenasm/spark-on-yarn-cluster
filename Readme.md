@@ -33,8 +33,8 @@ This is a work-in-progress project. (WIP)
   + Start the history server: `setup-history-server.sh`
   + Copy data to hdfs: `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv /tpc-ds-files/data/csv`
   + Create Tables: `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
-  + Run Sample Query: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py "SELECT count(*) from store_returns"`
-  + Run Queries:
+  + Run Sample Query: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -q 'SELECT * from (SELECT count(*) from store_returns)'`
+  <!-- + Run All 99 TPC-DS Queries: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/query/query_0.sql` => has error because of the ';' in the sql file -->
 6. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools
