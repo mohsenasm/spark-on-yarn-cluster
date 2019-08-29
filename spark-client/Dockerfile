@@ -16,6 +16,8 @@ RUN wget http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPA
     echo "export PATH=$PATH:/opt/spark/bin" >> /root/.bashrc && \
     echo "export SPARK_HOME=/opt/spark" >> /root/.bashrc
 
+RUN  echo "export PYSPARK_PYTHON=python3" >> /root/.bashrc
+
 RUN mkdir /tmp/spark-events && echo '\
 spark.executor.memory           4g \n\
 spark.eventLog.enabled          true \n\
@@ -26,5 +28,6 @@ spark.history.ui.port 18080 \n\
 spark.hadoop.yarn.timeline-service.enabled false' > /opt/spark/conf/spark-defaults.conf
 
 ADD setup-history-server.sh /usr/local/bin
+COPY scripts /root/scripts
 
 WORKDIR "/opt/spark"

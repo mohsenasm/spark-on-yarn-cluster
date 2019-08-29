@@ -21,18 +21,20 @@ This is a work-in-progress project. (WIP)
 4. _optional_ Run the SparkPi application in **client mode** on the yarn cluster: `./bin/spark-submit --class org.apache.spark.examples.SparkPi --master yarn --deploy-mode client examples/jars/spark-examples*.jar 3` and see run history on http://localhost:18080
 5. Remove the cluster: `docker-compose -f spark-client-docker-compose.yml down -v`
 
-## 3. Run TPC-DS on Spark+Yarn in client mode
+## 3. Run TPC-DS on Spark+Yarn
 
 0. First run the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build`
 1. Then go into the tpc-ds container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh bash`
-  + /run.sh gen_data
-  + /run.sh gen_queries
-  + /run.sh gen_ddl
+  + `/run.sh gen_data`
+  + `/run.sh gen_queries`
+  + `/run.sh gen_ddl`
+  + Or run all with `/run.sh gen_data && /run.sh gen_queries && /run.sh gen_ddl`
 2. Then go into the spark container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
   + Start the history server: `setup-history-server.sh`
-  + Copy data to hdfs: `hdfs dfs -mkdir -p /tpc-ds-files/ && hdfs dfs -copyFromLocal /tpc-ds-files/data /tpc-ds-files/`
-  + Create Tables `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
-  + Run Queries! (TODO!)
+  + Copy data to hdfs: `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv /tpc-ds-files/data/csv`
+  + Create Tables: `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
+  + Run Sample Query: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py "SELECT count(*) from store_returns"`
+  + Run Queries:
 6. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools

@@ -10,11 +10,12 @@ create table {table_name}_text
 {table_columns}
 )
 USING csv
-OPTIONS(header "false", delimiter "|", path "{data_path}/{table_name}.dat")
+OPTIONS(header "false", delimiter "|", path "{data_path}/csv/{table_name}.dat")
 ;
 drop table if exists {table_name};
 create table {table_name}
 using parquet
+OPTIONS(path "{data_path}/parquet/{table_name}")
 as (select * from {table_name}_text)
 ;
 drop table if exists {table_name}_text;
