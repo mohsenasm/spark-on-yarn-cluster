@@ -26,15 +26,15 @@ This is a work-in-progress project. (WIP)
 0. First run the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build`
 1. Then go into the tpc-ds container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh bash`
   + `/run.sh gen_data`
-  + `/run.sh gen_queries`
+  + `/run.sh copy_queries`
+  <!-- + `/run.sh gen_queries` -> cannot be used in spark because of wrong templates-->
   + `/run.sh gen_ddl`
-  + Or run all with `/run.sh gen_data && /run.sh gen_queries && /run.sh gen_ddl`
 2. Then go into the spark container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
   + Start the history server: `setup-history-server.sh`
   + Copy data to hdfs: `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv /tpc-ds-files/data/csv`
   + Create Tables: `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
   + Run Sample Query: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -q 'SELECT * from (SELECT count(*) from store_returns)'`
-  <!-- + Run All 99 TPC-DS Queries: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/query/query_0.sql` => has error because of the ';' in the sql file -->
+  + Run a TPC-DS Query from pre-generated queries: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/pre_generated_queries/query19.sql`
 6. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools
