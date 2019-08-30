@@ -31,11 +31,13 @@ This is a work-in-progress project. (WIP)
   + `/run.sh gen_ddl`
 2. Then go into the spark container: `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
   + Start the history server: `setup-history-server.sh`
-  + Copy data to hdfs: `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv /tpc-ds-files/data/csv`
-  + Create Tables: `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
-  + Run Sample Query: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -q 'SELECT * from (SELECT count(*) from store_returns)'`
-  + Run a TPC-DS Query from pre-generated queries: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/pre_generated_queries/query19.sql`
-6. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
+  + Copy data to HDFS: `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv /tpc-ds-files/data/csv`
+  + Create tables: `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
+  + Run sample query: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -q 'SELECT * from (SELECT count(*) from store_returns)'`
+  + **(Client Mode)** Run a TPC-DS query from pre-generated queries: `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/pre_generated_queries/query19.sql`
+  + Copy TPC-DS pre-generated queries to HDFS: `hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries && hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/`
+  + **(Cluster Mode)** Run a TPC-DS query from pre-generated queries: `spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -hf /tpc-ds-files/pre_generated_queries/query19.sql`
+3. Remove the cluster: `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools
 * namenode -> http://localhost:9870

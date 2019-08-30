@@ -29,7 +29,8 @@ elif args.local_file is not None:
         sqlText = content_file.read()
 elif args.hdfs_file is not None:
     cat = subprocess.Popen(["hadoop", "fs", "-cat", args.hdfs_file], stdout=subprocess.PIPE)
-    sqlText = "\n".join([line for line in cat.stdout])
+    sqlText = "".join([line.decode("utf-8")  for line in cat.stdout])
+    # print(sqlText)
 else:
     raise Exception('should provide one of arguments.')
 
