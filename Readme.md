@@ -40,7 +40,7 @@ This is a work-in-progress project. (WIP)
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build`
 2. Then go into the tpc-ds container:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh bash`
-    1. `/run.sh gen_data`
+    1. `/run.sh gen_data 1`
     2. `/run.sh copy_queries`
     <!-- + `/run.sh gen_queries` -> cannot be used in spark because of wrong templates-->
     3. `/run.sh gen_ddl`
@@ -52,14 +52,14 @@ This is a work-in-progress project. (WIP)
     `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv /tpc-ds-files/data/csv`
     3. Create tables:  
     `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds.sql`
-    4. Run sample query:  
-    `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -q 'SELECT * from (SELECT count(*) from store_returns)'`
+    4. _optional_ Run sample query:  
+    `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -q 'SELECT * from (SELECT count(*) from store_returns)' --name 'query for test database creation'`
     5. **(Client Mode)** Run a TPC-DS query from pre-generated queries:  
-    `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/pre_generated_queries/query19.sql`
+    `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -lf /tpc-ds-files/pre_generated_queries/query19.sql --name query19_client`
     6. Copy TPC-DS pre-generated queries to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries && hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/`
     7. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries:  
-    `spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -hf /tpc-ds-files/pre_generated_queries/query19.sql`
+    `spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -hf /tpc-ds-files/pre_generated_queries/query40.sql -hf /tpc-ds-files/pre_generated_queries/query52.sql --name query40_and_query52_cluster`
 4. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 

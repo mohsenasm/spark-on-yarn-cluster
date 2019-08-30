@@ -15,17 +15,16 @@ def run():
     spark = SparkSession.builder.appName(args.name).getOrCreate()
     sc = spark.sparkContext
 
-    # get sqlText
+    # get sqlTexts
     if args.query is not None:
-        sqlText = args.query
-    elif args.local_file is not None:
-        sqlText = read_local_file(args.local_file)
-    elif args.hdfs_file is not None:
-        sqlText = read_hdfs_file(args.hdfs_file)
-        # print(sqlText)
+        sqlTexts = [args.query]
+    elif (args.local_file is not None) and (len(args.local_file) > 0):
+        sqlTexts = [read_local_file(f) for f in args.local_file]
+    elif (args.hdfs_file is not None) and (len(args.hdfs_file) > 0):
+        sqlTexts = [read_hdfs_file(f) for f in args.hdfs_file]
     else:
         raise Exception('should provide one of arguments.')
-        # sqlText = "SELECT * from (SELECT count(*) from store_returns)"
+        # sqlTexts = ["SELECT * from (SELECT count(*) from store_returns)"]
 
     # load tables
     Path = sc._gateway.jvm.org.apache.hadoop.fs.Path
@@ -37,17 +36,20 @@ def run():
         name = str(folder.getPath().getName())
         spark.read.parquet(path).createOrReplaceTempView(name)
 
-    # exec query
-    spark.sql(sqlText).show()
+    # exec queries
+    print("-"*10)
+    for sqlText in sqlTexts:
+        spark.sql(sqlText).show()
+        print("-"*10)
 
     spark.stop()
 
 
 # parse args & get query text
 parser = argparse.ArgumentParser()
-parser.add_argument("-n", "--name", help="Name of the Application")
-parser.add_argument("-hf", "--hdfs_file", help="Query File Address in HDFS")
-parser.add_argument("-lf", "--local_file", help="Query File Address in Local File System")
+parser.add_argument("-n", "--name", default="query.py", help="Name of the Application")
+parser.add_argument("-hf", "--hdfs_file", action='append', help="Query File Address in HDFS")
+parser.add_argument("-lf", "--local_file", action='append', help="Query File Address in Local File System")
 parser.add_argument("-q", "--query", help="Query Text")
 args = parser.parse_args()
 
