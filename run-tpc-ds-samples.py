@@ -81,31 +81,22 @@ def setup_history_server():
     log("+ setup-history-server retured with exitcode => {}".format(p.returncode))
 
 def create_parquet_files(scale):
-    mkdir = popen_str(spark_client_command
-     + 'hdfs dfs -mkdir -p /tpc-ds-files/data/parquet_{scale}'.format(scale=scale))
-    log("- create_parquet_files({}).mkdir wating ...".format(scale))
-    mkdir.wait()
-    log("+ create_parquet_files({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
+    check_exist = popen_str(spark_client_command
+     + 'hdfs dfs -mkdir /tpc-ds-files/data/parquet_{scale}'.format(scale=scale)).wait()
+    if str(check_exist) == "0":
+        mkdir = popen_str(spark_client_command
+         + 'hdfs dfs -mkdir -p /tpc-ds-files/data/parquet_{scale}'.format(scale=scale))
+        log("- create_parquet_files({}).mkdir wating ...".format(scale))
+        mkdir.wait()
+        log("+ create_parquet_files({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
 
-    parquet = popen_str(spark_client_command
-     + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql'.format(scale=scale))
-    log("- create_parquet_files({}) wating ...".format(scale))
-    parquet.wait()
-    log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))
-
-# def run_benchmarks(scales):
-#     wait_list = []
-#
-#     for scale in scales:
-#         run = popen_str(spark_client_command
-#          + 'spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query52.sql --name query52_cluster_{scale}G'.format(scale))
-#
-#         wait_list.append(("run {}".format(scale), run))
-#
-#     for msg, process in wait_list:
-#         print("- wait for {msg}".format(msg=msg))
-#         process.wait()
-#         print("+ {msg} returned with exitcode => {exitcode}".format(msg=msg, exitcode=process.returncode))
+        parquet = popen_str(spark_client_command
+         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql'.format(scale=scale))
+        log("- create_parquet_files({}) wating ...".format(scale))
+        parquet.wait()
+        log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))
+    else:
+        log("+ create_parquet_files({}) skipped".format(scale))
 
 def run_benchmark(query, scale):
     run = popen_str(spark_client_command
@@ -115,11 +106,23 @@ def run_benchmark(query, scale):
     run.wait()
     log("+ run_benchmark({query}, {scale}) returned with exitcode => {exitcode}".format(query=query, scale=scale, exitcode=run.returncode))
 
+def copy_history():
+    copy_to_container = popen_str(spark_client_command
+     + 'hdfs dfs -copyToLocal /spark-history/* /spark-history/')
+    log("- copy_history.to_container wating ...")
+    copy_to_container.wait()
+    log("+ copy_history.to_container returned with exitcode => {exitcode}".format(exitcode=copy_to_container.returncode))
+
+    container_id = subprocess.check_output("docker-compose -f spark-client-with-tpcds-docker-compose.yml ps -q spark-client".split()).decode("utf-8").strip()
+
+    copy_to_host = popen_str("docker cp {}:/spark-history .".format(container_id))
+    log("- copy_history wating ...")
+    copy_to_host.wait()
+    log("+ copy_history returned with exitcode => {exitcode}".format(exitcode=copy_to_host.returncode))
 
 def main():
     scales = sys.argv[1:]
-    queries = [52]
-    # queries = [5, 19, 26, 40, 52]
+    queries = [5, 19, 26, 40, 52]
 
     print_time() # log time
     run_the_cluster()
@@ -136,6 +139,8 @@ def main():
         for query in queries:
             print_time() # log time
             run_benchmark(query, scale)
+    print_time() # log time
+    copy_history()
     print_time() # log time
 
 
