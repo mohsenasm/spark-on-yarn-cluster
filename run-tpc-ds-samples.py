@@ -122,7 +122,7 @@ def copy_history():
 
 def main():
     scales = sys.argv[1:]
-    queries = [5, 19, 26, 40, 52]
+    queries = [5, 19, 21, 26, 40, 52]
 
     print_time() # log time
     run_the_cluster()
