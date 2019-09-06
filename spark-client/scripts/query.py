@@ -30,7 +30,7 @@ def run():
     Path = sc._gateway.jvm.org.apache.hadoop.fs.Path
     FileSystem = sc._gateway.jvm.org.apache.hadoop.fs.FileSystem
     fs = FileSystem.get(sc._jsc.hadoopConfiguration())
-    list_status = fs.listStatus(Path('/tpc-ds-files/data/parquet'))
+    list_status = fs.listStatus(Path('/tpc-ds-files/data/parquet_{}'.format(args.scale)))
     for folder in list_status:
         path = str(folder.getPath())
         name = str(folder.getPath().getName())
@@ -48,6 +48,7 @@ def run():
 # parse args & get query text
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--name", default="query.py", help="Name of the Application")
+parser.add_argument("-s", "--scale", default="1", help="Scale of the generated data")
 parser.add_argument("-hf", "--hdfs_file", action='append', help="Query File Address in HDFS")
 parser.add_argument("-lf", "--local_file", action='append', help="Query File Address in Local File System")
 parser.add_argument("-q", "--query", help="Query Text")

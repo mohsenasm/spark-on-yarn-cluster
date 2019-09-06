@@ -8,19 +8,19 @@ case "$1" in
     exit 0
     ;;
   "gen_data")
-    mkdir -p /tpc-ds-files/data/csv && cd /tpcds-kit/tools && ./dsdgen -SCALE ${2:-1} -DIR /tpc-ds-files/data/csv
+    mkdir -p /tpc-ds-files/data/csv_${2:-1} && cd /tpcds-kit/tools && ./dsdgen -SCALE ${2:-1} -DIR /tpc-ds-files/data/csv_${2:-1}
     ;;
   "rm_data")
     rm -r /tpc-ds-files/data/csv
     ;;
-  "gen_queries")
-    mkdir -p /tpc-ds-files/query && cd /tpcds-kit/tools && ./dsqgen -DIRECTORY ../query_templates -INPUT ../query_templates/templates.lst -SCALE ${2:-1} -VERBOSE Y -QUALIFY Y -OUTPUT_DIR /tpc-ds-files/query
-    ;;
+  # "gen_queries")
+  #   mkdir -p /tpc-ds-files/query && cd /tpcds-kit/tools && ./dsqgen -DIRECTORY ../query_templates -INPUT ../query_templates/templates.lst -SCALE ${2:-1} -VERBOSE Y -QUALIFY Y -OUTPUT_DIR /tpc-ds-files/query
+  #   ;;
   "copy_queries")
     mkdir -p /tpc-ds-files/pre_generated_queries && cp -r /pre_generated_queries/* /tpc-ds-files/pre_generated_queries/
     ;;
   "gen_ddl")
-    mkdir -p /tpc-ds-files/ddl && cd /tpcds-kit/tools && python3 /opt/gen_ddl.py tpcds.sql /tpc-ds-files/ddl/tpcds.sql
+    mkdir -p /tpc-ds-files/ddl && cd /tpcds-kit/tools && python3 /opt/gen_ddl.py ${2:-1} tpcds.sql /tpc-ds-files/ddl/tpcds_${2:-1}.sql
     ;;
   *)
     echo "args parsing error."

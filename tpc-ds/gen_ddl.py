@@ -1,8 +1,9 @@
 import re, sys, os
 
 regex = r"create table (\w*)\s*\(([^;]*)\);"
-in_file_path = sys.argv[1]
-out_file_path = sys.argv[2]
+scale = sys.argv[1]
+in_file_path = sys.argv[2]
+out_file_path = sys.argv[3]
 template = """---------------------------------------------
 drop table if exists {table_name}_text;
 create table {table_name}_text
@@ -10,12 +11,12 @@ create table {table_name}_text
 {table_columns}
 )
 USING csv
-OPTIONS(header "false", delimiter "|", path "{data_path}/csv/{table_name}.dat")
+OPTIONS(header "false", delimiter "|", path "{data_path}/csv_{scale}/{table_name}.dat")
 ;
 drop table if exists {table_name};
 create table {table_name}
 using parquet
-OPTIONS(path "{data_path}/parquet/{table_name}")
+OPTIONS(path "{data_path}/parquet_{scale}/{table_name}")
 as (select * from {table_name}_text)
 ;
 drop table if exists {table_name}_text;
@@ -37,4 +38,4 @@ with open(out_file_path, 'w') as out_file, open(in_file_path, 'r', encoding='utf
         table_columns = re.sub(r',\s*primary key \([^\)]*\)', '', table_columns)
 
         if table_name not in ignored_tables:
-            out_file.write(template.format(data_path=data_path, table_name=table_name, table_columns=table_columns))
+            out_file.write(template.format(scale=scale, data_path=data_path, table_name=table_name, table_columns=table_columns))

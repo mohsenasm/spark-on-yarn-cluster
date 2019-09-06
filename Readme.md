@@ -43,7 +43,7 @@ This is a work-in-progress project. (WIP)
     1. `/run.sh gen_data 1`
     2. `/run.sh copy_queries`
     <!-- + `/run.sh gen_queries` -> cannot be used in spark because of wrong templates-->
-    3. `/run.sh gen_ddl`
+    3. `/run.sh gen_ddl 1`
 3. Then go into the spark container:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
     1. Start the history server:  
@@ -61,6 +61,12 @@ This is a work-in-progress project. (WIP)
     7. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries:  
     `spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -hf /tpc-ds-files/pre_generated_queries/query40.sql -hf /tpc-ds-files/pre_generated_queries/query52.sql --name query40_and_query52_cluster`
 4. Remove the cluster:  
+`docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
+
+## 4. Run Multiple Sample of TPC-DS on Spark+Yarn
+
+1. Run `python3 run-tpc-ds-samples.py 1 3 5 10`. Then history will be on hdfs:///spark-history.
+2. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
 ## Web Tools
