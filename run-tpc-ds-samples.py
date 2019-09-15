@@ -78,6 +78,14 @@ def copy_to_hdfs(scales):
     copy_queries.wait()
     log("+ copy_queries retured with exitcode => {}".format(copy_queries.returncode))
 
+def remove_csv_data_from_local(scales):
+    for scale in scales:
+        rm = popen_nohup_str('docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds '
+         + 'rm -r /tpc-ds-files/data/csv_{scale}'.format(scale=scale))
+        log("- remove_csv_data_from_local({}) wating ...".format(scale))
+        rm.wait()
+        log("+ remove_csv_data_from_local({}) retured with exitcode => {}".format(scale, rm.returncode))
+
 def setup_history_server():
     p = popen_nohup_str(spark_client_command
      + 'setup-history-server.sh')
@@ -102,6 +110,14 @@ def create_parquet_files(scale):
         log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))
     else:
         log("+ create_parquet_files({}) skipped".format(scale))
+
+def remove_csv_data_from_hdfs(scales):
+    for scale in scales:
+        rm = popen_nohup_str(spark_client_command
+         + 'hdfs dfs -rm -r /tpc-ds-files/data/csv_{scale}'.format(scale=scale))
+        log("- remove_csv_data_from_hdfs({}) wating ...".format(scale))
+        rm.wait()
+        log("+ remove_csv_data_from_hdfs({}) retured with exitcode => {}".format(scale, rm.returncode))
 
 def run_benchmark(query, scale):
     run = popen_nohup_str(spark_client_command
@@ -133,9 +149,11 @@ def main():
     run_the_cluster(); print_time() # log time
     generate_tpc_ds_for_scales(scales); print_time() # log time
     copy_to_hdfs(scales); print_time() # log time
+    remove_csv_data_from_local(scales); print_time() # log time
     setup_history_server(); print_time() # log time
     for scale in scales:
         create_parquet_files(scale); print_time() # log time
+    remove_csv_data_from_hdfs(scales); print_time() # log time
     for scale in scales:
         for query in queries:
             run_benchmark(query, scale); print_time() # log time
