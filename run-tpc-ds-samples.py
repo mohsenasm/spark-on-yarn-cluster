@@ -8,6 +8,8 @@ def log(msg):
     print(str(msg) + "\r", flush=True)
     with open("stdout.txt","a") as out:
         out.write(str(msg) + "\n")
+    with open("runner_log.txt","a") as out:
+        out.write(str(msg) + "\n")
 
 def print_time():
     log(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -124,8 +126,14 @@ def run_benchmark(query, scale):
      + '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'.format(query=query, scale=scale))
 
     log("- run_benchmark({}, {}) wating ...".format(query, scale))
-    run.wait()
-    log("+ run_benchmark({query}, {scale}) returned with exitcode => {exitcode}".format(query=query, scale=scale, exitcode=run.returncode))
+    try:
+        run.wait(timeout=60*run_benchmark_timeout) # timeout in seconds
+        log("+ run_benchmark({query}, {scale}) returned with exitcode => {exitcode}".format(query=query, scale=scale, exitcode=run.returncode))
+    except subprocess.TimeoutExpired:
+        log("+ run_benchmark({query}, {scale}) does not terminate after {timeout} min, terminating ...".format(query=query, scale=scale, timeout=run_benchmark_timeout))
+        run.terminate()
+        log("+ run_benchmark({query}, {scale}) terminated".format(query=query, scale=scale))
+
 
 def copy_history():
     copy_to_container = popen_nohup_str(spark_client_command
@@ -141,9 +149,12 @@ def copy_history():
     copy_to_host.wait()
     log("+ copy_history returned with exitcode => {exitcode}".format(exitcode=copy_to_host.returncode))
 
+run_benchmark_timeout = 5 # minutes
+
 def main():
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
+    # queries = [19, 21, 26, 40, 52]
 
     print_time() # log time
     run_the_cluster(); print_time() # log time
