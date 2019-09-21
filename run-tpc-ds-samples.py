@@ -136,6 +136,12 @@ def run_benchmark(query, scale):
 
 
 def copy_history():
+    rm_old_logs = popen_nohup_str(spark_client_command
+     + 'rm /spark-history/*')
+    log("- copy_history.rm_old_logs wating ...")
+    rm_old_logs.wait()
+    log("+ copy_history.rm_old_logs returned with exitcode => {exitcode}".format(exitcode=rm_old_logs.returncode))
+
     copy_to_container = popen_nohup_str(spark_client_command
      + 'hdfs dfs -copyToLocal /spark-history/* /spark-history/')
     log("- copy_history.to_container wating ...")
