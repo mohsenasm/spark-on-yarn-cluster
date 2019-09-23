@@ -113,6 +113,13 @@ def create_parquet_files(scale):
     else:
         log("+ create_parquet_files({}) skipped".format(scale))
 
+def remove_parquet_files(scale):
+    rm = popen_nohup_str(spark_client_command
+     + 'hdfs dfs -rm -r /tpc-ds-files/data/parquet_{scale}'.format(scale=scale))
+    log("- remove_parquet_files({}) wating ...".format(scale))
+    rm.wait()
+    log("+ remove_parquet_files({}) retured with exitcode => {}".format(scale, rm.returncode))
+
 def remove_csv_data_from_hdfs(scales):
     for scale in scales:
         rm = popen_nohup_str(spark_client_command
@@ -157,7 +164,7 @@ def copy_history():
 
 run_benchmark_timeout = 5 # minutes
 
-def main():
+def run_all_scales():
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
     # queries = [19, 21, 26, 40, 52]
@@ -176,6 +183,24 @@ def main():
             run_benchmark(query, scale); print_time() # log time
     copy_history(); print_time() # log time
 
+def run_all_scales_one_by_one():
+    scales = sys.argv[1:]
+    queries = [5, 19, 21, 26, 40, 52]
+    # queries = [19, 21, 26, 40, 52]
+
+    print_time() # log time
+    for scale in scales:
+        run_the_cluster(); print_time() # log time
+        generate_tpc_ds_for_scales([scale]); print_time() # log time
+        copy_to_hdfs([scale]); print_time() # log time
+        remove_csv_data_from_local([scale]); print_time() # log time
+        setup_history_server(); print_time() # log time
+        create_parquet_files(scale); print_time() # log time
+        remove_csv_data_from_hdfs([scale]); print_time() # log time
+        for query in queries:
+            run_benchmark(query, scale); print_time() # log time
+        copy_history(); print_time() # log time
+        remove_parquet_files(scale); print_time() # log time
 
 if __name__ == "__main__":
-    main()
+    run_all_scales_one_by_one()
