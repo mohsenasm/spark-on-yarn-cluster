@@ -39,7 +39,7 @@ def run():
     # exec queries
     print("-"*10)
     for sqlText in sqlTexts:
-        spark.sql(sqlText).show()
+        spark.sql(sqlText).collect()
         print("-"*10)
 
     spark.stop()
