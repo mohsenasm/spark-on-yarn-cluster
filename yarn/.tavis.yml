@@ -1,0 +1,19 @@
+sudo: 'required'
+
+services:
+  - docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.24.1
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+deploy:
+  provider: script
+  script: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker-compose -f spark-client-with-tpcds-docker-compose.yml build && docker-compose -f spark-client-with-tpcds-docker-compose.yml push
+  on:
+    branch: master
