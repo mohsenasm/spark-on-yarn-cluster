@@ -1,5 +1,7 @@
 # Spark On Yarn Cluster
 
+[![Docker Build Status](https://travis-ci.org/mohsenasm/spark-on-yarn-cluster.svg?branch=master)](https://travis-ci.org/mohsenasm/spark-on-yarn-cluster)
+
 ## 0. Disclaimer
 
 This is a work-in-progress project. (WIP)
