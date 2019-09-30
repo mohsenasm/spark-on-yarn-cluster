@@ -15,4 +15,4 @@ install:
 
 script:
   - docker-compose -f spark-client-with-tpcds-docker-compose.yml build
-  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD && docker-compose -f spark-client-with-tpcds-docker-compose.yml push
+  - docker login -u mohsenasm -p $DOCKER_PASSWORD && docker-compose -f spark-client-with-tpcds-docker-compose.yml push
