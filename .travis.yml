@@ -5,7 +5,7 @@ services:
 
 branches:
   only:
-    - test-ci
+    - master
 
 install:
   - sudo rm /usr/local/bin/docker-compose
