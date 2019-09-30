@@ -1,93 +1,93 @@
 version: "3"
 
 services:
-  tpc-ds:
-    build: tpc-ds
-    image: mohsenasm/spark-on-yarn-cluster/tpc-ds:1.0
-    environment:
-      data_path: "hdfs:///tpc-ds-files/data"
-    command: /run.sh exit
-    networks:
-      - yarn_net
-    volumes:
-      - tpc-ds-files:/tpc-ds-files
-
-  spark-client:
-    build: spark-client
-    image: mohsenasm/spark-on-yarn-cluster/spark_client:1.0
-    environment:
-      SERVICE_PRECONDITION: "resourcemanager:8088"
-      SPARK_HOME: "/opt/spark"
-      PYSPARK_PYTHON: "python3"
-    ports:
-      - 18080:18080
-    command: exit
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
-    volumes:
-      - tpc-ds-files:/tpc-ds-files:ro
-      - spark-history:/spark-history
-
-  resourcemanager:
-    build: yarn/resource_manager
-    image: mohsenasm/spark-on-yarn-cluster/resource_manager:1.0
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
-    ports: # maybe cause security issue
-      - 8088:8088
-    expose:
-      # - 8088
-      - 8032
-      - 8030
-      - 8031
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
-
-  nodemanager:
-    build: yarn/node_manager
-    image: mohsenasm/spark-on-yarn-cluster/node_manager:1.0
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
-    expose:
-      - "1000-65535"
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
-
-  namenode:
-    build: yarn/name_node
-    image: mohsenasm/spark-on-yarn-cluster/name_node:1.0
-    ports:
-      - 9870:9870
-    expose:
-      - 9000
-    volumes:
-      - hadoop_namenode:/hadoop/dfs/name
-    environment:
-      - CLUSTER_NAME=test
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
-
-  datanode:
-    image: yarn/data_node
-    image: mohsenasm/spark-on-yarn-cluster/data_node:1.0
-    expose:
-      - 9864
-    volumes:
-      - hadoop_datanode:/hadoop/dfs/data
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870"
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
+  # tpc-ds:
+  #   build: tpc-ds
+  #   image: mohsenasm/spark-on-yarn-cluster/tpc-ds:1.0
+  #   environment:
+  #     data_path: "hdfs:///tpc-ds-files/data"
+  #   command: /run.sh exit
+  #   networks:
+  #     - yarn_net
+  #   volumes:
+  #     - tpc-ds-files:/tpc-ds-files
+  #
+  # spark-client:
+  #   build: spark-client
+  #   image: mohsenasm/spark-on-yarn-cluster/spark_client:1.0
+  #   environment:
+  #     SERVICE_PRECONDITION: "resourcemanager:8088"
+  #     SPARK_HOME: "/opt/spark"
+  #     PYSPARK_PYTHON: "python3"
+  #   ports:
+  #     - 18080:18080
+  #   command: exit
+  #   networks:
+  #     - yarn_net
+  #   env_file:
+  #     - ./hadoop.env
+  #   volumes:
+  #     - tpc-ds-files:/tpc-ds-files:ro
+  #     - spark-history:/spark-history
+  #
+  # resourcemanager:
+  #   build: yarn/resource_manager
+  #   image: mohsenasm/spark-on-yarn-cluster/resource_manager:1.0
+  #   environment:
+  #     SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
+  #   ports: # maybe cause security issue
+  #     - 8088:8088
+  #   expose:
+  #     # - 8088
+  #     - 8032
+  #     - 8030
+  #     - 8031
+  #   networks:
+  #     - yarn_net
+  #   env_file:
+  #     - ./hadoop.env
+  #
+  # nodemanager:
+  #   build: yarn/node_manager
+  #   image: mohsenasm/spark-on-yarn-cluster/node_manager:1.0
+  #   environment:
+  #     SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+  #   expose:
+  #     - "1000-65535"
+  #   networks:
+  #     - yarn_net
+  #   env_file:
+  #     - ./hadoop.env
+  #
+  # namenode:
+  #   build: yarn/name_node
+  #   image: mohsenasm/spark-on-yarn-cluster/name_node:1.0
+  #   ports:
+  #     - 9870:9870
+  #   expose:
+  #     - 9000
+  #   volumes:
+  #     - hadoop_namenode:/hadoop/dfs/name
+  #   environment:
+  #     - CLUSTER_NAME=test
+  #   networks:
+  #     - yarn_net
+  #   env_file:
+  #     - ./hadoop.env
+  #
+  # datanode:
+  #   image: yarn/data_node
+  #   image: mohsenasm/spark-on-yarn-cluster/data_node:1.0
+  #   expose:
+  #     - 9864
+  #   volumes:
+  #     - hadoop_datanode:/hadoop/dfs/data
+  #   environment:
+  #     SERVICE_PRECONDITION: "namenode:9870"
+  #   networks:
+  #     - yarn_net
+  #   env_file:
+  #     - ./hadoop.env
 
   historyserver:
     build: yarn/history_server
