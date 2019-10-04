@@ -3,19 +3,20 @@
 import subprocess
 import sys
 import datetime
+import pathlib
 
 def log(msg):
     print(str(msg) + "\r", flush=True)
-    with open("stdout.txt","a") as out:
+    with open("output/stdout.txt","a") as out:
         out.write(str(msg) + "\n")
-    with open("runner_log.txt","a") as out:
+    with open("output/runner_log.txt","a") as out:
         out.write(str(msg) + "\n")
 
 def print_time():
     log(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 def popen(command):
-    with open("stdout.txt","ab") as out, open("stderr.txt","ab") as err:
+    with open("output/stdout.txt","ab") as out, open("output/stderr.txt","ab") as err:
         # log(command)
         return subprocess.Popen(command, stdout=out, stderr=err)
 
@@ -28,21 +29,24 @@ def popen_nohup_str(command_str):
     command = command_str.split()
     return popen(command)
 
+docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
+run_cluster_commmand = "docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build"
+
 def run_the_cluster():
-    up = popen_nohup_str("docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build")
-    log("- docker-compose up wating ...")
+    up = popen_nohup_str(run_cluster_commmand)
+    log(f"- run_the_cluster({run_cluster_commmand}) wating ...")
     up.wait()
-    log("+ system is up with exitcode => {}".format(up.returncode))
+    log("+ run_the_cluster returned with exitcode => {}".format(up.returncode))
 
 def generate_tpc_ds_for_scales(scales):
     wait_list = []
 
-    copy_queries = popen_nohup_str("docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh copy_queries")
+    copy_queries = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh copy_queries")
     wait_list.append(("copy_queries", copy_queries))
 
     for scale in scales:
-        gen_data = popen_nohup_str("docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh gen_data {}".format(scale))
-        gen_ddl = popen_nohup_str("docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds /run.sh gen_ddl {}".format(scale))
+        gen_data = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_data {scale}")
+        gen_ddl = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_ddl {scale}")
 
         wait_list.append(("gen_data {}".format(scale), gen_data))
         wait_list.append(("gen_ddl {}".format(scale), gen_ddl))
@@ -52,7 +56,7 @@ def generate_tpc_ds_for_scales(scales):
         process.wait()
         log("+ {msg} returned with exitcode => {exitcode}".format(msg=msg, exitcode=process.returncode))
 
-spark_client_command = "docker-compose -f spark-client-with-tpcds-docker-compose.yml run spark-client "
+spark_client_command = f"docker-compose -f {docker_compose_file_name} run spark-client "
 
 def copy_to_hdfs(scales):
     for scale in scales:
@@ -82,7 +86,7 @@ def copy_to_hdfs(scales):
 
 def remove_csv_data_from_local(scales):
     for scale in scales:
-        rm = popen_nohup_str('docker-compose -f spark-client-with-tpcds-docker-compose.yml run tpc-ds '
+        rm = popen_nohup_str(f'docker-compose -f {docker_compose_file_name} run tpc-ds '
          + 'rm -r /tpc-ds-files/data/csv_{scale}'.format(scale=scale))
         log("- remove_csv_data_from_local({}) wating ...".format(scale))
         rm.wait()
@@ -155,7 +159,7 @@ def copy_history():
     copy_to_container.wait()
     log("+ copy_history.to_container returned with exitcode => {exitcode}".format(exitcode=copy_to_container.returncode))
 
-    container_id = subprocess.check_output("docker-compose -f spark-client-with-tpcds-docker-compose.yml ps -q spark-client".split()).decode("utf-8").strip()
+    container_id = subprocess.check_output(f"docker-compose -f {docker_compose_file_name} ps -q spark-client".split()).decode("utf-8").strip()
 
     copy_to_host = popen_nohup_str("docker cp {}:/spark-history .".format(container_id))
     log("- copy_history wating ...")
@@ -165,6 +169,8 @@ def copy_history():
 run_benchmark_timeout = 5 # minutes
 
 def run_all_scales():
+    pathlib.Path('output').mkdir(parents=True, exist_ok=True)
+
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
     # queries = [19, 21, 26, 40, 52]
@@ -184,6 +190,8 @@ def run_all_scales():
     copy_history(); print_time() # log time
 
 def run_all_scales_one_by_one():
+    pathlib.Path('output').mkdir(parents=True, exist_ok=True)
+
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
     # queries = [19, 21, 26, 40, 52]

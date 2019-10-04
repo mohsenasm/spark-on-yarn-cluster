@@ -65,7 +65,7 @@ This is a work-in-progress project. (WIP)
 
 ## 4. Run Multiple Sample of TPC-DS on Spark+Yarn
 
-1. Run `python3 run-tpc-ds-samples.py 1 3 5 10`. Then history will be on `hdfs:///spark-history` and on `spark-history` in the host.
+1. Run `python3 run_tpcds.py 1 3 5 10`. Then history will be on `hdfs:///spark-history` and on `spark-history` in the host.
 2. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
