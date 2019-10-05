@@ -3,7 +3,7 @@ version: "3"
 services:
   tpc-ds:
     build: tpc-ds
-    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.1.0
+    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.1.staging
     environment:
       data_path: "hdfs:///tpc-ds-files/data"
     command: /run.sh exit
@@ -14,7 +14,7 @@ services:
 
   spark-client:
     build: spark-client
-    image: mohsenasm/spark-on-yarn-cluster:spark_client.1.0
+    image: mohsenasm/spark-on-yarn-cluster:spark_client.1.staging
     environment:
       SERVICE_PRECONDITION: "resourcemanager:8088"
       SPARK_HOME: "/opt/spark"
@@ -32,7 +32,7 @@ services:
 
   resourcemanager:
     build: yarn/resource_manager
-    image: mohsenasm/spark-on-yarn-cluster:resource_manager.1.0
+    image: mohsenasm/spark-on-yarn-cluster:resource_manager.1.staging
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
     ports: # maybe cause security issue
@@ -49,7 +49,7 @@ services:
 
   nodemanager:
     build: yarn/node_manager
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.0
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
     expose:
@@ -61,7 +61,7 @@ services:
 
   namenode:
     build: yarn/name_node
-    image: mohsenasm/spark-on-yarn-cluster:name_node.1.0
+    image: mohsenasm/spark-on-yarn-cluster:name_node.1.staging
     ports:
       - 9870:9870
     expose:
@@ -77,7 +77,7 @@ services:
 
   datanode:
     image: yarn/data_node
-    image: mohsenasm/spark-on-yarn-cluster:data_node.1.0
+    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
     expose:
       - 9864
     volumes:
@@ -91,7 +91,7 @@ services:
 
   historyserver:
     build: yarn/history_server
-    image: mohsenasm/spark-on-yarn-cluster:history_server.1.0
+    image: mohsenasm/spark-on-yarn-cluster:history_server.1.staging
     ports:
       - 8188:8188
     environment:

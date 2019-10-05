@@ -2,7 +2,7 @@ version: "3"
 
 services:
   resourcemanager: # 1
-    image: mohsenasm/spark-on-yarn-cluster:resource_manager.1.0
+    image: mohsenasm/spark-on-yarn-cluster:resource_manager.1.staging
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
     ports: # maybe cause security issue
@@ -18,7 +18,7 @@ services:
       - ./hadoop.env
 
   namenode: # 1
-    image: mohsenasm/spark-on-yarn-cluster:name_node.1.0
+    image: mohsenasm/spark-on-yarn-cluster:name_node.1.staging
     ports:
       - 9870:9870
     expose:
@@ -33,7 +33,7 @@ services:
       - ./hadoop.env
 
   historyserver: # 1
-    image: mohsenasm/spark-on-yarn-cluster:history_server.1.0
+    image: mohsenasm/spark-on-yarn-cluster:history_server.1.staging
     ports:
       - 8188:8188
     environment:
@@ -46,7 +46,7 @@ services:
       - ./hadoop.env
 
   datanode: # n
-    image: mohsenasm/spark-on-yarn-cluster:data_node.1.0
+    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
     expose:
       - 9864
     volumes:
@@ -59,7 +59,7 @@ services:
       - ./hadoop.env
 
   nodemanager: # n
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.0
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
     expose:
