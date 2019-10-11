@@ -8,6 +8,8 @@
 
 FROM debian:9
 
+LABEL maintainer="m.m.asemanmanzar@gmail.com"
+
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python-pip && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python3-pip wget gcc make flex bison byacc build-essential aptitude libstdc++6 bash && rm -rf /var/lib/apt/lists/*

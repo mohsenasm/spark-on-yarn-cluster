@@ -73,3 +73,9 @@ This is a work-in-progress project. (WIP)
 * namenode -> http://localhost:9870
 * spark history -> http://localhost:18080
 * hadoop history -> http://localhost:8188
+
+## To See Progress in Swarm
+* ```
+docker service create --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock -p 80:8080 -e PORT=8080 --constraint 'node.role == manager' --name swarm-dashboard charypar/swarm-dashboard
+```
+* swarm-dashboard -> http://localhost:80
