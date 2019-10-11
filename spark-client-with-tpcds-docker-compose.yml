@@ -76,7 +76,7 @@ services:
       - ./hadoop.env
 
   datanode:
-    image: yarn/data_node
+    build: yarn/data_node
     image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
     expose:
       - 9864
