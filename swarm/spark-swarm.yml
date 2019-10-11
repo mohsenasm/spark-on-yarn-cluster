@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 
 services:
   resourcemanager: # 1
@@ -79,3 +79,4 @@ volumes:
 networks:
   yarn_net:
     driver: overlay
+    attachable: true
