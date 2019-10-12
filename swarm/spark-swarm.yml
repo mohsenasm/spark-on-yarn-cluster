@@ -50,7 +50,10 @@ services:
     expose:
       - 9864
     volumes:
-      - hadoop_datanode:/hadoop/dfs/data
+      - /hadoop/dfs/data # Anonymous volume: will be removed after removing the container
+      # - hadoop_datanode:/hadoop/dfs/data
+    deploy:
+      replicas: 2
     environment:
       SERVICE_PRECONDITION: "namenode:9870"
     networks:
@@ -71,10 +74,8 @@ services:
 
 volumes:
   hadoop_namenode:
-  hadoop_datanode:
+  # hadoop_datanode:
   hadoop_historyserver:
-  tpc-ds-files:
-  spark-history:
 
 networks:
   yarn_net:

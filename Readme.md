@@ -69,6 +69,16 @@ This is a work-in-progress project. (WIP)
 2. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
+## 5. Run Multiple Sample of TPC-DS on Spark+Yarn in **Swarm Cluster**
+
+0. Change directory to the `swarm` directory in root of the project.
+1. Run `python3 run_tpcds_on_swarm.py 1 3 5 10`. Then history will be on `hdfs:///spark-history` and on `spark-history` in the host.
+2. Remove the cluster:  
+  1. Remove all services: `docker stack rm tpcds`
+  2. On each nodes:
+    * wait until `docker ps` print no services.
+    * execute `docker volume prune` and confirm `y`.
+
 ## Web Tools
 * namenode -> http://localhost:9870
 * spark history -> http://localhost:18080

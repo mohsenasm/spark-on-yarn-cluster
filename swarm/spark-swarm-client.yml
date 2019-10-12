@@ -29,9 +29,6 @@ services:
       - spark-history:/spark-history
 
 volumes:
-  hadoop_namenode:
-  hadoop_datanode:
-  hadoop_historyserver:
   tpc-ds-files:
   spark-history:
 
