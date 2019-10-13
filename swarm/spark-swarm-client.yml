@@ -23,7 +23,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop-client.env
+      - ./hadoop.env
     volumes:
       - tpc-ds-files:/tpc-ds-files:ro
       - spark-history:/spark-history

@@ -4,7 +4,7 @@ services:
   resourcemanager: # 1
     image: mohsenasm/spark-on-yarn-cluster:resource_manager.1.staging
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864"
     ports: # maybe cause security issue
       - 8088:8088
     expose:
@@ -37,7 +37,7 @@ services:
     ports:
       - 8188:8188
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
     volumes:
       - hadoop_historyserver:/hadoop/yarn/timeline
     networks:
@@ -45,36 +45,77 @@ services:
     env_file:
       - ./hadoop.env
 
-  datanode: # n
+  datanode1: # n
     image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
     expose:
       - 9864
     volumes:
-      - /hadoop/dfs/data # Anonymous volume: will be removed after removing the container
-      # - hadoop_datanode:/hadoop/dfs/data
-    deploy:
-      replicas: 2
+      - hadoop_datanode:/hadoop/dfs/data
     environment:
       SERVICE_PRECONDITION: "namenode:9870"
     networks:
       - yarn_net
     env_file:
       - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
 
-  nodemanager: # n
+  datanode2: # n
+    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.role != manager
+
+  nodemanager1: # n
     image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    deploy:
+      mode: global
     expose:
       - "1000-65535"
     networks:
       - yarn_net
     env_file:
       - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  nodemanager2: # n
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    deploy:
+      mode: global
+    expose:
+      - "1000-65535"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.role != manager
 
 volumes:
   hadoop_namenode:
-  # hadoop_datanode:
+  hadoop_datanode:
   hadoop_historyserver:
 
 networks:

@@ -77,7 +77,7 @@ This is a work-in-progress project. (WIP)
   1. Remove all services: `docker stack rm tpcds`
   2. On each nodes:
     * wait until `docker ps` print no services.
-    * execute `docker volume prune` and confirm `y`.
+    * execute `docker ps && docker container prune && docker volume prune` and confirm `y`.
 
 ## Web Tools
 * namenode -> http://localhost:9870
