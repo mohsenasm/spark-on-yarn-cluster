@@ -30,10 +30,13 @@ def popen_nohup_str(command_str):
     return popen(command)
 
 def run_the_cluster():
-    up = popen_nohup_str(run_cluster_commmand)
-    log(f"- run_the_cluster({run_cluster_commmand}) wating ...")
-    up.wait()
-    log("+ run_the_cluster returned with exitcode => {}".format(up.returncode))
+    i = 1
+    for command in run_cluster_commmands:
+        up = popen_nohup_str(command)
+        log(f"- run_the_cluster.({i}/{len(run_cluster_commmands)})({command}) wating ...")
+        up.wait()
+        log("+ run_the_cluster returned with exitcode => {}".format(up.returncode))
+        i += 1
 
 def generate_tpc_ds_for_scales(scales):
     wait_list = []
@@ -170,7 +173,7 @@ def copy_history():
 
     container_id = subprocess.check_output(f"docker-compose -f {docker_compose_file_name} ps -q spark-client".split()).decode("utf-8").strip()
 
-    copy_to_host = popen_nohup_str("docker cp {}:/spark-history .".format(container_id))
+    copy_to_host = popen_nohup_str("docker cp {}:/spark-history ./output".format(container_id))
     log("- copy_history wating ...")
     copy_to_host.wait()
     log("+ copy_history returned with exitcode => {exitcode}".format(exitcode=copy_to_host.returncode))
@@ -221,7 +224,7 @@ def run_all_scales_one_by_one():
 
 
 docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
-run_cluster_commmand = "docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build"
+run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build"]
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "

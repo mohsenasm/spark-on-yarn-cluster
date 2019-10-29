@@ -71,8 +71,10 @@ This is a work-in-progress project. (WIP)
 
 ## 5. Run Multiple Sample of TPC-DS on Spark+Yarn in **Swarm Cluster**
 
+<!-- docker node update --label-add node-id=1 t1-1  -->
+
 0. Change directory to the `swarm` directory in root of the project.
-1. Run `python3 run_tpcds_on_swarm.py 1 3 5 10`. Then history will be on `hdfs:///spark-history` and on `spark-history` in the host.
+1. Run `python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `spark-history` in the host.
 2. Remove the cluster:  
   1. Remove all services: `docker stack rm tpcds`
   2. On each nodes:

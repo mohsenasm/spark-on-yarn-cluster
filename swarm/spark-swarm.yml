@@ -60,7 +60,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == manager
+          - node.labels.node-id==1
 
   datanode2: # n
     image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
@@ -77,14 +77,29 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role != manager
+          - node.labels.node-id==2
+
+  datanode3: # n
+    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.labels.node-id==3
 
   nodemanager1: # n
     image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
-    deploy:
-      mode: global
     expose:
       - "1000-65535"
     networks:
@@ -94,14 +109,12 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role == manager
+          - node.labels.node-id==1
 
   nodemanager2: # n
     image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
-    deploy:
-      mode: global
     expose:
       - "1000-65535"
     networks:
@@ -111,7 +124,22 @@ services:
     deploy:
       placement:
         constraints:
-          - node.role != manager
+          - node.labels.node-id==2
+
+  nodemanager3: # n
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    expose:
+      - "1000-65535"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.labels.node-id==3
 
 volumes:
   hadoop_namenode:
