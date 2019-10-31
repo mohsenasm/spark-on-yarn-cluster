@@ -140,11 +140,16 @@ def remove_csv_data_from_hdfs(scales):
         rm.wait()
         log("+ remove_csv_data_from_hdfs({}) retured with exitcode => {}".format(scale, rm.returncode))
 
-def run_benchmark(query, scale):
+def run_benchmark(query, scale, with_spark_sql=True):
     spark_client_command = get_spark_client_command()
 
+    if with_spark_sql:
+        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_{scale} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'
+    else:
+        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'
+
     run = popen_nohup_str(spark_client_command
-     + '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'.format(query=query, scale=scale))
+     + cmd.format(query=query, scale=scale))
 
     log("- run_benchmark({}, {}) wating ...".format(query, scale))
     try:
