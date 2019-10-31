@@ -5,6 +5,7 @@ scale = sys.argv[1]
 in_file_path = sys.argv[2]
 out_file_path = sys.argv[3]
 template = """---------------------------------------------
+
 drop table if exists {table_name}_text;
 create table {table_name}_text
 (
@@ -25,7 +26,16 @@ drop table if exists {table_name}_text;
 data_path = os.environ['data_path']
 ignored_tables = ["dbgen_version"]
 
+template_create_db = """---------------------------------------------
+
+CREATE DATABASE IF NOT EXISTS scale_{scale};
+USE scale_{scale};
+
+"""
+
 with open(out_file_path, 'w') as out_file, open(in_file_path, 'r', encoding='utf-8') as in_file:
+    out_file.write(template_create_db.format(scale=scale))
+
     matches = re.finditer(regex, in_file.read(), re.MULTILINE)
 
     for match in matches:

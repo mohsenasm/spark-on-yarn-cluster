@@ -27,10 +27,12 @@ services:
     volumes:
       - tpc-ds-files:/tpc-ds-files:ro
       - spark-history:/spark-history
+      - spark-derby-system:/spark-derby-system
 
 volumes:
   tpc-ds-files:
   spark-history:
+  spark-derby-system:
 
 networks:
   yarn_net:

@@ -114,7 +114,7 @@ def create_parquet_files(scale):
         log("+ create_parquet_files({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
 
         parquet = popen_nohup_str(spark_client_command
-         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql'.format(scale=scale))
+         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql --name create_db_scale_{scale}'.format(scale=scale))
         log("- create_parquet_files({}) wating ...".format(scale))
         parquet.wait()
         log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))

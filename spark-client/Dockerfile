@@ -20,6 +20,7 @@ RUN wget http://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPA
 
 RUN  echo "export PYSPARK_PYTHON=python3" >> /root/.bashrc
 
+# derby.system.home => https://www.ibm.com/support/knowledgecenter/en/SS3H8V_1.1.0/com.ibm.izoda.v1r1.azka100/topics/azkic_t_updconfigfiles.htm
 RUN mkdir /tmp/spark-events && echo '\
 spark.executor.memory           4g \n\
 spark.eventLog.enabled          true \n\
@@ -27,7 +28,9 @@ spark.eventLog.dir              hdfs:///spark-history \n\
 spark.history.fs.logDirectory   hdfs:///spark-history \n\
 spark.yarn.historyServer.address 0.0.0.0:18080 \n\
 spark.history.ui.port 18080 \n\
-spark.hadoop.yarn.timeline-service.enabled false' > /opt/spark/conf/spark-defaults.conf
+spark.hadoop.yarn.timeline-service.enabled false \n\
+spark.driver.extraJavaOptions -Dderby.system.home=/spark-derby-system \n\
+' > /opt/spark/conf/spark-defaults.conf
 
 ADD setup-history-server.sh /usr/local/bin
 COPY scripts /root/scripts

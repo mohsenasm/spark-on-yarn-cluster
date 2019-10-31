@@ -51,16 +51,16 @@ This is a work-in-progress project. (WIP)
     2. Copy data to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet_1 && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv_1 /tpc-ds-files/data/csv_1`
     3. Create tables:  
-    `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1.sql`
+    `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1.sql --name create_db_scale_1`
     4. _optional_ Run sample query:  
     `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -q 'SELECT * from (SELECT count(*) from store_returns)' --name 'query for test database creation'`
     5. **(Client Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
     `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -lf /tpc-ds-files/pre_generated_queries/query5.sql --name query5_client`
-    6. Copy TPC-DS pre-generated queries to HDFS:  
+    6. **(Client Mode + spark-sql)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1 -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
+    7. Copy TPC-DS pre-generated queries to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries && hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/`
-    7. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
+    8. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
     `spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -s 1 -hf /tpc-ds-files/pre_generated_queries/query40.sql -hf /tpc-ds-files/pre_generated_queries/query52.sql --name query40_and_query52_cluster`
-    <!-- 8. **(Client Mode + spark-sql)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -f /tpc-ds-files/pre_generated_queries/query26.sql` -->
 4. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
@@ -75,6 +75,7 @@ This is a work-in-progress project. (WIP)
 <!-- docker node update --label-add node-id=1 t1-1  -->
 
 0. Change directory to the `swarm` directory in root of the project.
+1. Run swarm cluster with `docker stack deploy -c spark-swarm.yml tpcds`.
 1. Run `python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `spark-history` in the host.
 2. Remove the cluster:  
   1. Remove all services: `docker stack rm tpcds`
