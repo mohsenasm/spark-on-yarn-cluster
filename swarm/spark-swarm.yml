@@ -16,6 +16,10 @@ services:
       - yarn_net
     env_file:
       - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.labels.node-id==1
 
   namenode: # 1
     image: mohsenasm/spark-on-yarn-cluster:name_node.1.staging
@@ -31,6 +35,10 @@ services:
       - yarn_net
     env_file:
       - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.labels.node-id==1
 
   historyserver: # 1
     image: mohsenasm/spark-on-yarn-cluster:history_server.1.staging
@@ -44,6 +52,12 @@ services:
       - yarn_net
     env_file:
       - ./hadoop.env
+    deploy:
+      placement:
+        constraints:
+          - node.labels.node-id==1
+
+  # ------------------------- datanodes -------------------------
 
   datanode1: # n
     image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
@@ -95,6 +109,8 @@ services:
       placement:
         constraints:
           - node.labels.node-id==3
+
+  # ------------------------- nodemanagers -------------------------
 
   nodemanager1: # n
     image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
