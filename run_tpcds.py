@@ -7,10 +7,12 @@ import pathlib
 
 def log(msg):
     print(str(msg) + "\r", flush=True)
-    with open("output/stdout.txt","a") as out:
-        out.write(str(msg) + "\n")
-    with open("output/runner_log.txt","a") as out:
-        out.write(str(msg) + "\n")
+    with open("output/stdout.txt","a") as f:
+        f.write(str(msg) + "\n")
+    with open("output/runner_log.txt","a") as f:
+        f.write(str(msg) + "\n")
+    with open("output/stderr.txt","a") as f:
+        f.write(str(msg) + "\n")
 
 def print_time():
     log(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -48,8 +50,8 @@ def generate_tpc_ds_for_scales(scales):
         gen_data = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_data {scale}")
         gen_ddl = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_ddl {scale}")
 
-        wait_list.append(("gen_data {}".format(scale), gen_data))
-        wait_list.append(("gen_ddl {}".format(scale), gen_ddl))
+        wait_list.append(("gen_data({})".format(scale), gen_data))
+        wait_list.append(("gen_ddl({})".format(scale), gen_ddl))
 
     for msg, process in wait_list:
         log("- {msg} wating ...".format(msg=msg))
@@ -62,27 +64,27 @@ def copy_to_hdfs(scales):
     for scale in scales:
         mkdir = popen_nohup_str(spark_client_command
          + 'hdfs dfs -mkdir -p /tpc-ds-files/data')
-        log("- copy_data({}).mkdir wating ...".format(scale))
+        log("- copy_data_to_hdfs({}).mkdir wating ...".format(scale))
         mkdir.wait()
-        log("+ copy_data({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
+        log("+ copy_data_to_hdfs({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
 
         copy_data = popen_nohup_str(spark_client_command
          + 'hdfs dfs -copyFromLocal /tpc-ds-files/data/csv_{scale} /tpc-ds-files/data/csv_{scale}'.format(scale=scale))
-        log("- copy_data({}) wating ...".format(scale))
+        log("- copy_data_to_hdfs({}) wating ...".format(scale))
         copy_data.wait()
-        log("+ copy_data({}) retured with exitcode => {}".format(scale, copy_data.returncode))
+        log("+ copy_data_to_hdfs({}) retured with exitcode => {}".format(scale, copy_data.returncode))
 
     mkdir = popen_nohup_str(spark_client_command
      + 'hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries')
-    log("- copy_queries.mkdir wating ...")
+    log("- copy_queries_to_hdfs.mkdir wating ...")
     mkdir.wait()
-    log("+ copy_queries.mkdir retured with exitcode => {}".format(mkdir.returncode))
+    log("+ copy_queries_to_hdfs.mkdir retured with exitcode => {}".format(mkdir.returncode))
 
     copy_queries = popen_nohup_str(spark_client_command
      + 'hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/')
-    log("- copy_queries wating ...")
+    log("- copy_queries_to_hdfs wating ...")
     copy_queries.wait()
-    log("+ copy_queries retured with exitcode => {}".format(copy_queries.returncode))
+    log("+ copy_queries_to_hdfs retured with exitcode => {}".format(copy_queries.returncode))
 
 def remove_csv_data_from_local(scales):
     for scale in scales:
@@ -186,7 +188,7 @@ def copy_history():
 run_benchmark_timeout = 5 # minutes
 
 def run_all_scales():
-    pathlib.Path('output').mkdir(parents=True, exist_ok=True)
+    pathlib.Path('output').mkdir(parents=True, exist_ok=False)
 
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
@@ -207,7 +209,7 @@ def run_all_scales():
     copy_history(); print_time() # log time
 
 def run_all_scales_one_by_one():
-    pathlib.Path('output').mkdir(parents=True, exist_ok=True)
+    pathlib.Path('output').mkdir(parents=True, exist_ok=False)
 
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
