@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   resourcemanager: # 1
-    image: mohsenasm/spark-on-yarn-cluster:resource_manager.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:resource_manager.2
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode1:9864"
     ports: # maybe cause security issue
@@ -22,7 +22,7 @@ services:
           - node.labels.node-id==1
 
   namenode: # 1
-    image: mohsenasm/spark-on-yarn-cluster:name_node.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:name_node.2
     ports:
       - 9870:9870
     expose:
@@ -41,7 +41,7 @@ services:
           - node.labels.node-id==1
 
   historyserver: # 1
-    image: mohsenasm/spark-on-yarn-cluster:history_server.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:history_server.2
     ports:
       - 8188:8188
     environment:
@@ -60,7 +60,7 @@ services:
   # ------------------------- datanodes -------------------------
 
   datanode1: # n
-    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:data_node.2
     expose:
       - 9864
     volumes:
@@ -77,7 +77,7 @@ services:
           - node.labels.node-id==1
 
   datanode2: # n
-    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:data_node.2
     expose:
       - 9864
     volumes:
@@ -94,7 +94,7 @@ services:
           - node.labels.node-id==2
 
   datanode3: # n
-    image: mohsenasm/spark-on-yarn-cluster:data_node.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:data_node.2
     expose:
       - 9864
     volumes:
@@ -113,7 +113,7 @@ services:
   # ------------------------- nodemanagers -------------------------
 
   nodemanager1: # n
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.2
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
     expose:
@@ -128,7 +128,7 @@ services:
           - node.labels.node-id==1
 
   nodemanager2: # n
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.2
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
     expose:
@@ -143,7 +143,7 @@ services:
           - node.labels.node-id==2
 
   nodemanager3: # n
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.2
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
     expose:
