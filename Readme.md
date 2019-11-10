@@ -89,8 +89,8 @@ This is a work-in-progress project. (WIP)
     * execute `docker ps && docker container prune && docker volume prune` and confirm `y`.  
 
 ## To See Progress in Swarm  
-```docker service create --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock -p 80:8080 -e PORT=8080 --constraint 'node.role == manager' --name swarm-dashboard charypar/swarm-dashboard
-```  
+`docker service create --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock -p 80:8080 -e PORT=8080 --constraint 'node.role == manager' --name swarm-dashboard charypar/swarm-dashboard
+`
 
 ## Web Tools  
 * namenode -> http://localhost:9870  
