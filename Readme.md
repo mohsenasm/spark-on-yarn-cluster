@@ -70,31 +70,30 @@ This is a work-in-progress project. (WIP)
 
 1. Run `python3 run_tpcds.py 1 3 5 10`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.
 2. Remove the cluster:  
-`docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
+`docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`  
 
-## 5. Run Multiple Sample of TPC-DS on Spark+Yarn in **Swarm Cluster**
+## 5. Run Multiple Sample of TPC-DS on Spark+Yarn in **Swarm Cluster**  
 
-0. Change directory to the `swarm` directory in root of the project.
-1. Preparations:
-  1. Setup swarm manager with `docker swarm init --advertise-addr <the_manager_ip_address>`. This command will print a `docker swarm join` command, copy it.
-  2. Run the `join command` into each worker.
-  3. On the swarm manager, for each node, assign label `node-id`. (`docker node update --label-add node-id=1 node1_hostname`)
-  4. Update file `swarm/spark-swarm-client.yml`.
-2. Run swarm cluster with `docker stack deploy -c spark-swarm.yml tpcds` and wait until all services in `docker service ls` be running.
-3. Run `python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.
+0. Change directory to the `swarm` directory in root of the project.  
+1. Preparations:  
+  1. Setup swarm manager with `docker swarm init --advertise-addr <the_manager_ip_address>`. This command will print a `docker swarm join` command, copy it.  
+  2. Run the `join command` into each worker.  
+  3. On the swarm manager, for each node, assign label `node-id`. (`docker node update --label-add node-id=1 node1_hostname`)  
+  4. Update file `swarm/spark-swarm-client.yml`.  
+2. Run swarm cluster with `docker stack deploy -c spark-swarm.yml tpcds` and wait until all services in `docker service ls` be running.  
+3. Run `python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.  
 4. Remove the cluster:  
-  1. Remove all services: `docker stack rm tpcds && docker-compose -f spark-swarm-client.yml down -v`
-  2. On each nodes:
-    * wait until `docker ps` prints no services.
-    * execute `docker ps && docker container prune && docker volume prune` and confirm `y`.
+  1. Remove all services: `docker stack rm tpcds && docker-compose -f spark-swarm-client.yml down -v`  
+  2. On each nodes:  
+    * wait until `docker ps` prints no services.  
+    * execute `docker ps && docker container prune && docker volume prune` and confirm `y`.  
 
-## Web Tools
-* namenode -> http://localhost:9870
-* spark history -> http://localhost:18080
-* hadoop history -> http://localhost:8188
+## To See Progress in Swarm  
+```docker service create --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock -p 80:8080 -e PORT=8080 --constraint 'node.role == manager' --name swarm-dashboard charypar/swarm-dashboard
+```  
 
-## To See Progress in Swarm
-* ```
-docker service create --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock -p 80:8080 -e PORT=8080 --constraint 'node.role == manager' --name swarm-dashboard charypar/swarm-dashboard
-```
+## Web Tools  
+* namenode -> http://localhost:9870  
+* spark history -> http://localhost:18080  
+* hadoop history -> http://localhost:8188  
 * swarm-dashboard -> http://localhost:80
