@@ -4,6 +4,7 @@ import subprocess
 import sys
 import datetime
 import pathlib
+import os
 
 def log(msg):
     print(str(msg) + "\r", flush=True)
@@ -146,12 +147,12 @@ def run_benchmark(query, scale, with_spark_sql=True):
     spark_client_command = get_spark_client_command()
 
     if with_spark_sql:
-        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_{scale} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'
+        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_{scale} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
     else:
-        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'
+        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
 
     run = popen_nohup_str(spark_client_command
-     + cmd.format(query=query, scale=scale))
+     + cmd.format(query=query, scale=scale, additional_spark_config=additional_spark_config))
 
     log("- run_benchmark({}, {}) wating ...".format(query, scale))
     try:
@@ -232,6 +233,7 @@ def run_all_scales_one_by_one():
 
 docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
 run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build"]
+additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "

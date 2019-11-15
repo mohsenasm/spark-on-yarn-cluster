@@ -79,7 +79,7 @@ This is a work-in-progress project. (WIP)
   1. Setup swarm manager with `docker swarm init --advertise-addr <the_manager_ip_address>`. This command will print a `docker swarm join` command, copy it.
   2. Run the `join command` into each worker.
   3. On the swarm manager, for each node, assign label `node-id`. (`docker node update --label-add node-id=1 node1_hostname`)
-  4. Update file `swarm/spark-swarm-client.yml`.
+  4. Update file `swarm/spark-swarm.yml` and `swarm/spark-swarm-client.yml`.
 2. Run swarm cluster with `docker stack deploy -c spark-swarm.yml tpcds` and wait until all services in `docker service ls` be running.
 3. Run `python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.
 4. Remove the cluster:  

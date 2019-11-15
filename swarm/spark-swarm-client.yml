@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   tpc-ds: # 0
-    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.3
+    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.3.staging
     environment:
       data_path: "hdfs:///tpc-ds-files/data"
     command: /run.sh exit
@@ -12,11 +12,12 @@ services:
       - tpc-ds-files:/tpc-ds-files
 
   spark-client: # 0
-    image: mohsenasm/spark-on-yarn-cluster:spark_client.3
+    image: mohsenasm/spark-on-yarn-cluster:spark_client.4.staging
     environment:
       SERVICE_PRECONDITION: "resourcemanager:8088"
       SPARK_HOME: "/opt/spark"
       PYSPARK_PYTHON: "python3"
+      ADDITIONAL_SPARK_CONFIG: "--num-executors 5 --executor-cores 7 --executor-memory 7"
     ports:
       - 18080:18080
     command: exit
