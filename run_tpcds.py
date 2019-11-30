@@ -108,7 +108,7 @@ def setup_history_server():
     p.wait()
     log("+ setup-history-server retured with exitcode => {}".format(p.returncode))
 
-def create_parquet_files(scale):
+def create_tables(scale):
     spark_client_command = get_spark_client_command()
 
     use_csv_postfix = "_csv" if use_csv_instead_of_parquet else ""
@@ -118,17 +118,17 @@ def create_parquet_files(scale):
     if str(check_exist) == "0":
         mkdir = popen_nohup_str(spark_client_command
          + 'hdfs dfs -mkdir -p /tpc-ds-files/data/parquet_{scale}'.format(scale=scale))
-        log("- create_parquet_files({}).mkdir wating ...".format(scale))
+        log("- create_tables({}).mkdir_parquet wating ...".format(scale))
         mkdir.wait()
-        log("+ create_parquet_files({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
+        log("+ create_tables({}).mkdir_parquet retured with exitcode => {}".format(scale, mkdir.returncode))
 
         parquet = popen_nohup_str(spark_client_command
          + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}{use_csv_postfix}.sql --name create_db_scale_{scale} {additional_spark_config}'.format(scale=scale, use_csv_postfix=use_csv_postfix, additional_spark_config=additional_spark_config))
-        log("- create_parquet_files({}) wating ...".format(scale))
+        log("- create_tables({}) wating ...".format(scale))
         parquet.wait()
-        log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))
+        log("+ create_tables({}) retured with exitcode => {}".format(scale, parquet.returncode))
     else:
-        log("+ create_parquet_files({}) skipped".format(scale))
+        log("+ create_tables({}) skipped".format(scale))
 
 def remove_parquet_files(scale):
     spark_client_command = get_spark_client_command()
@@ -209,7 +209,7 @@ def run_all_scales():
     remove_csv_data_from_local(scales); print_time() # log time
     setup_history_server(); print_time() # log time
     for scale in scales:
-        create_parquet_files(scale); print_time() # log time
+        create_tables(scale); print_time() # log time
     remove_csv_data_from_hdfs(scales); print_time() # log time
     for scale in scales:
         for query in queries:
@@ -231,7 +231,7 @@ def run_all_scales_one_by_one():
         remove_csv_data_from_local([scale]); print_time() # log time
         setup_history_server(); print_time() # log time
         if not use_csv_instead_of_parquet:
-            create_parquet_files(scale); print_time() # log time
+            create_tables(scale); print_time() # log time
             remove_csv_data_from_hdfs([scale]); print_time() # log time
         for query in queries:
             run_benchmark(query, scale); print_time() # log time
