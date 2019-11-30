@@ -45,23 +45,27 @@ This is a work-in-progress project. (WIP)
     1. `/run.sh gen_data 1`
     2. `/run.sh copy_queries`
     <!-- + `/run.sh gen_queries` -> cannot be used in spark because of wrong templates-->
-    3. `/run.sh gen_ddl 1`
+    3. `/run.sh gen_ddl 1` for using parquet
+    4. `/run.sh gen_ddl_csv 1` for using csv
 3. Then go into the spark container:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml run -p 18080:18080 spark-client bash`
     1. Start the history server:  
     `setup-history-server.sh`
     2. Copy data to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet_1 && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv_1 /tpc-ds-files/data/csv_1`
-    3. Create tables:  
+    3. Create tables with parquet:  
     `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1.sql --name create_db_scale_1`
     4. _optional_ Run sample query:  
     `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -q 'SELECT * from (SELECT count(*) from store_returns)' --name 'query for test database creation'`
     5. **(Client Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
     `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -lf /tpc-ds-files/pre_generated_queries/query5.sql --name query5_client`
     6. **(Client Mode + spark-sql)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1 -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
-    7. Copy TPC-DS pre-generated queries to HDFS:  
+    7. Create tables with csv:  
+    `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1_csv.sql --name create_db_scale_1_csv`
+    8. **(Client Mode + spark-sql + csv)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1_csv -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
+    9. Copy TPC-DS pre-generated queries to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries && hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/`
-    8. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
+    10. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
     `spark-submit --master yarn --deploy-mode cluster /root/scripts/query.py -s 1 -hf /tpc-ds-files/pre_generated_queries/query40.sql -hf /tpc-ds-files/pre_generated_queries/query52.sql --name query40_and_query52_cluster`
 4. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`

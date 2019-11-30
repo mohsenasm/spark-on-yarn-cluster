@@ -22,7 +22,7 @@ ignored_tables = ["dbgen_version"]
 template_create_db = """---------------------------------------------
 
 CREATE DATABASE IF NOT EXISTS scale_{scale};
-USE scale_{scale};
+USE scale_{scale}_csv;
 
 """
 

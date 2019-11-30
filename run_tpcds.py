@@ -111,6 +111,8 @@ def setup_history_server():
 def create_parquet_files(scale):
     spark_client_command = get_spark_client_command()
 
+    use_csv_postfix = "_csv" if use_csv_instead_of_parquet else ""
+
     check_exist = popen_nohup_str(spark_client_command
      + 'hdfs dfs -mkdir /tpc-ds-files/data/parquet_{scale}'.format(scale=scale)).wait()
     if str(check_exist) == "0":
@@ -121,7 +123,7 @@ def create_parquet_files(scale):
         log("+ create_parquet_files({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
 
         parquet = popen_nohup_str(spark_client_command
-         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql --name create_db_scale_{scale} {additional_spark_config}'.format(scale=scale, additional_spark_config=additional_spark_config))
+         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}{use_csv_postfix}.sql --name create_db_scale_{scale} {additional_spark_config}'.format(scale=scale, use_csv_postfix=use_csv_postfix, additional_spark_config=additional_spark_config))
         log("- create_parquet_files({}) wating ...".format(scale))
         parquet.wait()
         log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))
@@ -147,16 +149,17 @@ def remove_csv_data_from_hdfs(scales):
         rm.wait()
         log("+ remove_csv_data_from_hdfs({}) retured with exitcode => {}".format(scale, rm.returncode))
 
-def run_benchmark(query, scale, with_spark_sql=True):
+def run_benchmark(query, scale):
     spark_client_command = get_spark_client_command()
+    use_csv_postfix = "_csv" if use_csv_instead_of_parquet else ""
 
-    if with_spark_sql:
-        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_{scale} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
+    if run_benchmarks_with_spark_sql:
+        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_{scale}{use_csv_postfix} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
     else:
         cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
 
     run = popen_nohup_str(spark_client_command
-     + cmd.format(query=query, scale=scale, additional_spark_config=additional_spark_config))
+     + cmd.format(query=query, scale=scale, additional_spark_config=additional_spark_config, use_csv_postfix=use_csv_postfix))
 
     log("- run_benchmark({}, {}) wating ...".format(query, scale))
     try:
@@ -241,8 +244,9 @@ def run_all_scales_one_by_one():
 
 docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
 run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d"]
+run_benchmarks_with_spark_sql = True
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
-use_csv_instead_of_parquet = os.getenv("USE_CSV", "True") == "True"
+use_csv_instead_of_parquet = (os.getenv("USE_CSV", "True") == "True") and run_benchmarks_with_spark_sql
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "
