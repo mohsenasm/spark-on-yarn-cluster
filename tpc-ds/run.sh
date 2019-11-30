@@ -22,6 +22,9 @@ case "$1" in
   "gen_ddl")
     mkdir -p /tpc-ds-files/ddl && cd /tpcds-kit/tools && python3 /opt/gen_ddl.py ${2:-1} tpcds.sql /tpc-ds-files/ddl/tpcds_${2:-1}.sql
     ;;
+  "gen_ddl_csv")
+    mkdir -p /tpc-ds-files/ddl && cd /tpcds-kit/tools && python3 /opt/gen_ddl_csv.py ${2:-1} tpcds.sql /tpc-ds-files/ddl/tpcds_${2:-1}_csv.sql
+    ;;
   *)
     echo "args parsing error."
     exit 1

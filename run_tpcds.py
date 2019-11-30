@@ -20,7 +20,7 @@ def print_time():
 
 def popen(command):
     with open("output/stdout.txt","ab") as out, open("output/stderr.txt","ab") as err:
-        # log(command)
+        log("# run command: " + str(command))
         return subprocess.Popen(command, stdout=out, stderr=err)
 
 def popen_str(command_str):
@@ -49,10 +49,14 @@ def generate_tpc_ds_for_scales(scales):
 
     for scale in scales:
         gen_data = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_data {scale}")
-        gen_ddl = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_ddl {scale}")
-
         wait_list.append(("gen_data({})".format(scale), gen_data))
-        wait_list.append(("gen_ddl({})".format(scale), gen_ddl))
+
+        if use_csv_instead_of_parquet:
+            gen_ddl_csv = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_ddl_csv {scale}")
+            wait_list.append(("gen_ddl_csv({})".format(scale), gen_ddl_csv))
+        else:
+            gen_ddl = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_ddl {scale}")
+            wait_list.append(("gen_ddl({})".format(scale), gen_ddl))
 
     for msg, process in wait_list:
         log("- {msg} wating ...".format(msg=msg))
@@ -117,7 +121,7 @@ def create_parquet_files(scale):
         log("+ create_parquet_files({}).mkdir retured with exitcode => {}".format(scale, mkdir.returncode))
 
         parquet = popen_nohup_str(spark_client_command
-         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql --name create_db_scale_{scale}'.format(scale=scale))
+         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}.sql --name create_db_scale_{scale} {additional_spark_config}'.format(scale=scale, additional_spark_config=additional_spark_config))
         log("- create_parquet_files({}) wating ...".format(scale))
         parquet.wait()
         log("+ create_parquet_files({}) retured with exitcode => {}".format(scale, parquet.returncode))
@@ -223,17 +227,22 @@ def run_all_scales_one_by_one():
         copy_to_hdfs([scale]); print_time() # log time
         remove_csv_data_from_local([scale]); print_time() # log time
         setup_history_server(); print_time() # log time
-        create_parquet_files(scale); print_time() # log time
-        remove_csv_data_from_hdfs([scale]); print_time() # log time
+        if not use_csv_instead_of_parquet:
+            create_parquet_files(scale); print_time() # log time
+            remove_csv_data_from_hdfs([scale]); print_time() # log time
         for query in queries:
             run_benchmark(query, scale); print_time() # log time
         copy_history(); print_time() # log time
-        remove_parquet_files(scale); print_time() # log time
+        if use_csv_instead_of_parquet:
+            remove_csv_data_from_hdfs([scale]); print_time() # log time
+        else:
+            remove_parquet_files(scale); print_time() # log time
 
 
 docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
-run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d --build"]
+run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d"]
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
+use_csv_instead_of_parquet = os.getenv("USE_CSV", "True") == "True"
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "
