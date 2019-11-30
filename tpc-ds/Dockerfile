@@ -24,5 +24,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 COPY pre_generated_queries /pre_generated_queries
 
 COPY gen_ddl.py /opt/gen_ddl.py
+COPY gen_ddl_csv.py /opt/gen_ddl_csv.py
 COPY run.sh /run.sh
 RUN chmod +x /run.sh

@@ -2,7 +2,7 @@ version: "3.2"
 
 services:
   tpc-ds: # 0
-    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.4.staging
+    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.5.staging
     environment:
       data_path: "hdfs:///tpc-ds-files/data"
     command: /run.sh exit
