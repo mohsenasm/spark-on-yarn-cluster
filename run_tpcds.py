@@ -230,8 +230,8 @@ def run_all_scales_one_by_one():
         copy_to_hdfs([scale]); print_time() # log time
         remove_csv_data_from_local([scale]); print_time() # log time
         setup_history_server(); print_time() # log time
+        create_tables(scale); print_time() # log time
         if not use_csv_instead_of_parquet:
-            create_tables(scale); print_time() # log time
             remove_csv_data_from_hdfs([scale]); print_time() # log time
         for query in queries:
             run_benchmark(query, scale); print_time() # log time
