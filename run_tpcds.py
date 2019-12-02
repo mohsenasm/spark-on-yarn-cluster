@@ -16,11 +16,11 @@ def log(msg):
         f.write(str(msg) + "\n")
 
 def print_time():
-    log(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    log("T " + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
 def popen(command):
     with open("output/stdout.txt","ab") as out, open("output/stderr.txt","ab") as err:
-        log("# run command: " + str(command))
+        log("C run command: " + str(command))
         return subprocess.Popen(command, stdout=out, stderr=err)
 
 def popen_str(command_str):
@@ -221,11 +221,11 @@ def run_all_scales_one_by_one():
 
     scales = sys.argv[1:]
     queries = [5, 19, 21, 26, 40, 52]
-    # queries = [19, 21, 26, 40, 52]
 
     print_time() # log time
+    run_the_cluster(); print_time() # log time
+
     for scale in scales:
-        run_the_cluster(); print_time() # log time
         generate_tpc_ds_for_scales([scale]); print_time() # log time
         copy_to_hdfs([scale]); print_time() # log time
         remove_csv_data_from_local([scale]); print_time() # log time
@@ -246,7 +246,7 @@ docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
 run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d"]
 run_benchmarks_with_spark_sql = True
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
-use_csv_instead_of_parquet = (os.getenv("USE_CSV", "True") == "True") and run_benchmarks_with_spark_sql
+use_csv_instead_of_parquet = (os.getenv("USE_CSV", "False").upper() == "TRUE") and run_benchmarks_with_spark_sql
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "
