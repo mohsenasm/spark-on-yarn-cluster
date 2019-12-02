@@ -53,14 +53,14 @@ This is a work-in-progress project. (WIP)
     `setup-history-server.sh`
     2. Copy data to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/data/parquet_1 && hdfs dfs -copyFromLocal /tpc-ds-files/data/csv_1 /tpc-ds-files/data/csv_1`
-    3. Create tables with parquet:  
+    3. Create parquet tables (for steps 4, 5, 6 and 10):  
     `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1.sql --name create_db_scale_1`
     4. _optional_ Run sample query:  
     `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -q 'SELECT * from (SELECT count(*) from store_returns)' --name 'query for test database creation'`
     5. **(Client Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
     `spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s 1 -lf /tpc-ds-files/pre_generated_queries/query5.sql --name query5_client`
     6. **(Client Mode + spark-sql)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1 -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
-    7. Create tables with csv:  
+    7. Create csv tables (for step 8):  
     `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1_csv.sql --name create_db_scale_1_csv`
     8. **(Client Mode + spark-sql + csv)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1_csv -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
     9. Copy TPC-DS pre-generated queries to HDFS:  
