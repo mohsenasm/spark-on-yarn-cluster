@@ -7,3 +7,5 @@ RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://ar
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python-pip && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python3-pip wget && rm -rf /var/lib/apt/lists/*
+
+RUN sed -i '/configure \/etc\/hadoop\/mapred-site.xml mapred MAPRED_CONF/ a configure /etc/hadoop/capacity-scheduler.xml capsched CAP_SCHED_CONF' /entrypoint.sh
