@@ -12,7 +12,7 @@ services:
       - tpc-ds-files:/tpc-ds-files
 
   spark-client: # 0
-    image: mohsenasm/spark-on-yarn-cluster:spark_client.5.staging
+    image: mohsenasm/spark-on-yarn-cluster:spark_client.6.staging
     environment:
       SERVICE_PRECONDITION: "resourcemanager:8088"
       SPARK_HOME: "/opt/spark"
