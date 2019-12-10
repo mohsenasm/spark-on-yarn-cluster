@@ -1,0 +1,14 @@
+version: "3.2"
+
+services:
+  log-viewer:
+    restart: always
+    build: .
+    image: mohsenasm/spark-on-yarn-cluster:log-viewer.1.staging
+    environment:
+      SPARK_HOME: "/opt/spark"
+    ports:
+      - 18080:18080
+    command: sleep 1d
+    volumes:
+      - ./spark-history-files:/spark-history:ro

@@ -1,0 +1,2 @@
+spark-history-files/*
+!spark-history-files/.gitkeep
