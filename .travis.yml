@@ -21,7 +21,7 @@ install:
 
 script:
   - docker login -u mohsenasm -p $DOCKER_PASSWORD && docker-compose -f spark-client-with-tpcds-docker-compose.yml build && docker-compose -f spark-client-with-tpcds-docker-compose.yml push
-  - docker login -u mohsenasm -p $DOCKER_PASSWORD && cd spark-history-files && docker-compose build && docker-compose push
+  - docker login -u mohsenasm -p $DOCKER_PASSWORD && cd spark-log-viewer && docker-compose build && docker-compose push
 
 # before_cache:
 #   # Save tagged docker images
