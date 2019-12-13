@@ -62,7 +62,7 @@ This is a work-in-progress project. (WIP)
     6. **(Client Mode + spark-sql)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1 -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
     7. Create csv tables (for step 8):  
     `spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_1_csv.sql --name create_db_scale_1_csv`
-    8. **(Client Mode + spark-sql + csv)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1_csv -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
+    8. **(Client Mode + spark-sql + csv_database)** Run a TPC-DS query from pre-generated queries with spark-sql: `spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_1_csv -f /tpc-ds-files/pre_generated_queries/query26.sql --name query26_cluster`
     9. Copy TPC-DS pre-generated queries to HDFS:  
     `hdfs dfs -mkdir -p /tpc-ds-files/pre_generated_queries && hdfs dfs -copyFromLocal /tpc-ds-files/pre_generated_queries /tpc-ds-files/`
     10. **(Cluster Mode)** Run a TPC-DS query from pre-generated queries with spark-submit:  
@@ -70,13 +70,13 @@ This is a work-in-progress project. (WIP)
 4. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`
 
-## 4. Run Multiple Sample of TPC-DS on Spark+Yarn
+## 4. Run Multiple Samples of TPC-DS on Spark+Yarn
 
 1. Run `python3 run_tpcds.py 1 3 5 10`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.
 2. Remove the cluster:  
 `docker-compose -f spark-client-with-tpcds-docker-compose.yml down -v`  
 
-## 5. Run Multiple Sample of TPC-DS on Spark+Yarn in **Swarm Cluster**  
+## 5. Run Multiple Samples of TPC-DS on Spark+Yarn in **Swarm Cluster**  
 
 0. Change directory to the `swarm` directory in root of the project.  
 1. Preparations:  
@@ -85,7 +85,7 @@ This is a work-in-progress project. (WIP)
     3. On the swarm manager, for each node, assign label `node-id`. (`docker node update --label-add node-id=1 node1_hostname`)  
     4. Update file `swarm/spark-swarm-client.yml`.  
 2. Run swarm cluster with `docker stack deploy -c spark-swarm.yml tpcds` and wait until all services in `docker service ls` be running.  
-3. Run `ADDITIONAL_SPARK_CONFIG="--num-executors 25 --executor-cores 1 --executor-memory 1G" USE_CSV="True" python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.  
+3. Run `ADDITIONAL_SPARK_CONFIG="--num-executors 25 --executor-cores 1 --executor-memory 1G" USE_CSV="False" python3 run_tpcds_on_swarm.py 1 10 20 40 35 70 100 120 135 150`. Then history will be on `hdfs:///spark-history` and on `./output/spark-history` in the host.  
 4. Remove the cluster:  
     1. Remove all services: `docker stack rm tpcds && docker-compose -f spark-swarm-client.yml down -v`  
     2. On each nodes:  
