@@ -157,7 +157,7 @@ def run_benchmark(query, scale, queue="default"):
     if run_benchmarks_with_spark_sql:
         cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --queue {queue} --conf spark.sql.crossJoin.enabled=true -database scale_{scale}{use_csv_postfix} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
     else:
-        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client --queue {queue} /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
+        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client --queue {queue} {additional_spark_config} /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G'
 
     for run_id in range(run_count):
         query_log_info = "({}, {}, {})[{}/{}]".format(query, scale, queue, run_id+1, run_count)
