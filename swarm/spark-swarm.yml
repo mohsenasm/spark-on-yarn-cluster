@@ -15,7 +15,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -34,7 +34,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -51,7 +51,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -70,7 +70,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -87,7 +87,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -104,7 +104,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -121,7 +121,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -138,7 +138,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -155,7 +155,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -170,7 +170,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -185,7 +185,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -200,7 +200,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:
@@ -215,7 +215,7 @@ services:
     networks:
       - yarn_net
     env_file:
-      - ./hadoop.env
+      - ../hadoop.env
     deploy:
       placement:
         constraints:

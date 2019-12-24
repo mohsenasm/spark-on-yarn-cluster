@@ -7,7 +7,8 @@ branches:
   only:
     # - nothing
     # - master
-    - staging
+    # - staging
+    # - multiQ
 
 install:
   - sudo rm /usr/local/bin/docker-compose

@@ -5,6 +5,7 @@ import sys
 import datetime
 import pathlib
 import os
+import threading
 
 def log(msg):
     print(str(msg) + "\r", flush=True)
@@ -123,7 +124,7 @@ def create_tables(scale):
         log("+ create_tables({}).mkdir_parquet retured with exitcode => {}".format(scale, mkdir.returncode))
 
         parquet = popen_nohup_str(spark_client_command
-         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}{use_csv_postfix}.sql --name create_db_scale_{scale} {additional_spark_config}'.format(scale=scale, use_csv_postfix=use_csv_postfix, additional_spark_config=additional_spark_config))
+         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}{use_csv_postfix}.sql --name create_db_scale_{scale} --queue {create_tables_queue} {additional_spark_config}'.format(scale=scale, use_csv_postfix=use_csv_postfix, create_tables_queue=create_tables_queue, additional_spark_config=additional_spark_config))
         log("- create_tables({}) wating ...".format(scale))
         parquet.wait()
         log("+ create_tables({}) retured with exitcode => {}".format(scale, parquet.returncode))
@@ -149,7 +150,7 @@ def remove_csv_data_from_hdfs(scales):
         rm.wait()
         log("+ remove_csv_data_from_hdfs({}) retured with exitcode => {}".format(scale, rm.returncode))
 
-def run_benchmark(query, scale):
+def run_benchmark(query, scale, queue="default"):
     spark_client_command = get_spark_client_command()
     use_csv_postfix = "_csv" if use_csv_instead_of_parquet else ""
 
@@ -158,18 +159,20 @@ def run_benchmark(query, scale):
     else:
         cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
 
-    run = popen_nohup_str(spark_client_command
-     + cmd.format(query=query, scale=scale, additional_spark_config=additional_spark_config, use_csv_postfix=use_csv_postfix))
+    for run_id in range(run_count):
+        query_log_info = "({}, {}, {})[{}/{}]".format(query, scale, queue, run_id+1, run_count)
 
-    log("- run_benchmark({}, {}) wating ...".format(query, scale))
-    try:
-        run.wait(timeout=60*run_benchmark_timeout) # timeout in seconds
-        log("+ run_benchmark({query}, {scale}) returned with exitcode => {exitcode}".format(query=query, scale=scale, exitcode=run.returncode))
-    except subprocess.TimeoutExpired:
-        log("+ run_benchmark({query}, {scale}) does not terminate after {timeout} min, terminating ...".format(query=query, scale=scale, timeout=run_benchmark_timeout))
-        run.terminate()
-        log("+ run_benchmark({query}, {scale}) terminated".format(query=query, scale=scale))
+        run = popen_nohup_str(spark_client_command
+         + cmd.format(query=query, scale=scale, additional_spark_config=additional_spark_config, use_csv_postfix=use_csv_postfix))
 
+        log("- run_benchmark{query_log_info} wating ...".format(query_log_info=query_log_info))
+        try:
+            run.wait(timeout=60*run_benchmark_timeout) # timeout in seconds
+            log("+ run_benchmark{query_log_info} returned with exitcode => {exitcode}".format(query_log_info=query_log_info, exitcode=run.returncode))
+        except subprocess.TimeoutExpired:
+            log("+ run_benchmark{query_log_info} does not terminate after {timeout} min, terminating ...".format(query_log_info=query_log_info, timeout=run_benchmark_timeout))
+            run.terminate()
+            log("+ run_benchmark{query_log_info} terminated".format(query_log_info=query_log_info))
 
 def copy_history():
     spark_client_command = get_spark_client_command()
@@ -234,7 +237,14 @@ def run_all_scales_one_by_one():
         if not use_csv_instead_of_parquet:
             remove_csv_data_from_hdfs([scale]); print_time() # log time
         for query in queries:
-            run_benchmark(query, scale); print_time() # log time
+            threads = []
+            for queue in queue_names:
+                threads.append(threading.Thread(target=run_benchmark, kwargs={"query": query, "scale": scale, "queue": queue}))
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join()    
+            print_time() # log time
         copy_history(); print_time() # log time
         if use_csv_instead_of_parquet:
             remove_csv_data_from_hdfs([scale]); print_time() # log time
@@ -247,6 +257,9 @@ run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compo
 run_benchmarks_with_spark_sql = True
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
 use_csv_instead_of_parquet = (os.getenv("USE_CSV", "False").upper() == "TRUE") and run_benchmarks_with_spark_sql
+create_tables_queue = os.getenv("CREATE_TABLE_QUEUE", "default")
+run_count = int(os.getenv("RUN_COUNT", "1"))
+queue_names = set(os.getenv("QUEUE_NAMES", "default").split(','))
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "
