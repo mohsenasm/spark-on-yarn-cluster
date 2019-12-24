@@ -5,7 +5,7 @@ services:
 
 branches:
   only:
-    # - nothing
+    - nothing
     # - master
     # - staging
     # - multiQ
