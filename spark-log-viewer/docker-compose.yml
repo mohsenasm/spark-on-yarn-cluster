@@ -4,7 +4,7 @@ services:
   log-viewer:
     restart: always
     build: .
-    image: mohsenasm/spark-on-yarn-cluster:log-viewer.1.staging
+    image: mohsenasm/spark-on-yarn-cluster:log-viewer.1.multiQ
     environment:
       SPARK_HOME: "/opt/spark"
     ports:

@@ -3,7 +3,7 @@ version: "3.2"
 services:
   tpc-ds:
     build: tpc-ds
-    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.7.staging
+    image: mohsenasm/spark-on-yarn-cluster:tpc-ds.7.multiQ
     environment:
       data_path: "hdfs:///tpc-ds-files/data"
     command: /run.sh exit
@@ -14,7 +14,7 @@ services:
 
   spark-client:
     build: spark-client
-    image: mohsenasm/spark-on-yarn-cluster:spark_client.7.staging
+    image: mohsenasm/spark-on-yarn-cluster:spark_client.7.multiQ
     environment:
       SERVICE_PRECONDITION: "resourcemanager:8088"
       SPARK_HOME: "/opt/spark"
@@ -33,7 +33,7 @@ services:
 
   resourcemanager:
     build: yarn/resource_manager
-    image: mohsenasm/spark-on-yarn-cluster:resource_manager.5.staging
+    image: mohsenasm/spark-on-yarn-cluster:resource_manager.5.multiQ
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
     ports: # maybe cause security issue
@@ -50,7 +50,7 @@ services:
 
   nodemanager:
     build: yarn/node_manager
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.staging
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.multiQ
     environment:
       SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
     expose:
@@ -62,7 +62,7 @@ services:
 
   namenode:
     build: yarn/name_node
-    image: mohsenasm/spark-on-yarn-cluster:name_node.5.staging
+    image: mohsenasm/spark-on-yarn-cluster:name_node.5.multiQ
     ports:
       - 9870:9870
     expose:
@@ -78,7 +78,7 @@ services:
 
   datanode:
     build: yarn/data_node
-    image: mohsenasm/spark-on-yarn-cluster:data_node.5.staging
+    image: mohsenasm/spark-on-yarn-cluster:data_node.5.multiQ
     expose:
       - 9864
     volumes:
@@ -92,7 +92,7 @@ services:
 
   historyserver:
     build: yarn/history_server
-    image: mohsenasm/spark-on-yarn-cluster:history_server.5.staging
+    image: mohsenasm/spark-on-yarn-cluster:history_server.5.multiQ
     ports:
       - 8188:8188
     environment:
