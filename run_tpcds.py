@@ -155,15 +155,15 @@ def run_benchmark(query, scale, queue="default"):
     use_csv_postfix = "_csv" if use_csv_instead_of_parquet else ""
 
     if run_benchmarks_with_spark_sql:
-        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --conf spark.sql.crossJoin.enabled=true -database scale_{scale}{use_csv_postfix} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
+        cmd = '/opt/spark/bin/spark-sql --master yarn --deploy-mode client --queue {queue} --conf spark.sql.crossJoin.enabled=true -database scale_{scale}{use_csv_postfix} -f /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
     else:
-        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
+        cmd = '/opt/spark/bin/spark-submit --master yarn --deploy-mode client --queue {queue} /root/scripts/query.py -s {scale} -hf /tpc-ds-files/pre_generated_queries/query{query}.sql --name query{query}_cluster_{scale}G {additional_spark_config}'
 
     for run_id in range(run_count):
         query_log_info = "({}, {}, {})[{}/{}]".format(query, scale, queue, run_id+1, run_count)
 
         run = popen_nohup_str(spark_client_command
-         + cmd.format(query=query, scale=scale, additional_spark_config=additional_spark_config, use_csv_postfix=use_csv_postfix))
+         + cmd.format(queue=queue, query=query, scale=scale, additional_spark_config=additional_spark_config, use_csv_postfix=use_csv_postfix))
 
         log("- run_benchmark{query_log_info} wating ...".format(query_log_info=query_log_info))
         try:
@@ -243,7 +243,7 @@ def run_all_scales_one_by_one():
             for t in threads:
                 t.start()
             for t in threads:
-                t.join()    
+                t.join()
             print_time() # log time
         copy_history(); print_time() # log time
         if use_csv_instead_of_parquet:
@@ -266,3 +266,6 @@ def get_spark_client_command():
 
 if __name__ == "__main__":
     run_all_scales_one_by_one()
+
+# run sample:
+# ADDITIONAL_SPARK_CONFIG='--num-executors 15 --executor-cores 2 --executor-memory 2G' RUN_COUNT='3' QUEUE_NAMES='alpha,beta' CREATE_TABLE_QUEUE='alpha' python3 run_tpcds.py 1 2
