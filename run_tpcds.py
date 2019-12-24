@@ -254,7 +254,7 @@ def run_all_scales_one_by_one():
 
 docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
 run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d"]
-run_benchmarks_with_spark_sql = True
+run_benchmarks_with_spark_sql = (os.getenv("BNCH_SPARK_SQL", "TRUE").upper() == "TRUE")
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
 use_csv_instead_of_parquet = (os.getenv("USE_CSV", "False").upper() == "TRUE") and run_benchmarks_with_spark_sql
 create_tables_queue = os.getenv("CREATE_TABLE_QUEUE", "default")
@@ -268,4 +268,4 @@ if __name__ == "__main__":
     run_all_scales_one_by_one()
 
 # run sample:
-# ADDITIONAL_SPARK_CONFIG='--num-executors 15 --executor-cores 2 --executor-memory 2G' RUN_COUNT='3' QUEUE_NAMES='alpha,beta' CREATE_TABLE_QUEUE='alpha' python3 run_tpcds.py 1 2
+# ADDITIONAL_SPARK_CONFIG='--num-executors 15 --executor-cores 2 --executor-memory 2G' BNCH_SPARK_SQL=false RUN_COUNT='3' QUEUE_NAMES='alpha,beta' CREATE_TABLE_QUEUE='alpha' python3 run_tpcds.py 1 2
