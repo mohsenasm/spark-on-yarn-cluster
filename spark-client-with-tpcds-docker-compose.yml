@@ -48,18 +48,6 @@ services:
     env_file:
       - ./hadoop.env
 
-  nodemanager:
-    build: yarn/node_manager
-    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.staging
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
-    expose:
-      - "1000-65535"
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
-
   namenode:
     build: yarn/name_node
     image: mohsenasm/spark-on-yarn-cluster:name_node.5.staging
@@ -71,20 +59,6 @@ services:
       - hadoop_namenode:/hadoop/dfs/name
     environment:
       - CLUSTER_NAME=test
-    networks:
-      - yarn_net
-    env_file:
-      - ./hadoop.env
-
-  datanode:
-    build: yarn/data_node
-    image: mohsenasm/spark-on-yarn-cluster:data_node.5.staging
-    expose:
-      - 9864
-    volumes:
-      - hadoop_datanode:/hadoop/dfs/data
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870"
     networks:
       - yarn_net
     env_file:
@@ -104,9 +78,116 @@ services:
     env_file:
       - ./hadoop.env
 
+  nodemanager1:
+    build: yarn/node_manager
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.staging
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    expose:
+      - "1000-65535"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  datanode1:
+    build: yarn/data_node
+    image: mohsenasm/spark-on-yarn-cluster:data_node.5.staging
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode1:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  nodemanager2:
+    build: yarn/node_manager
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.staging
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    expose:
+      - "1000-65535"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  datanode2:
+    build: yarn/data_node
+    image: mohsenasm/spark-on-yarn-cluster:data_node.5.staging
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode2:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  nodemanager3:
+    build: yarn/node_manager
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.staging
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    expose:
+      - "1000-65535"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  datanode3:
+    build: yarn/data_node
+    image: mohsenasm/spark-on-yarn-cluster:data_node.5.staging
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode3:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  nodemanager4:
+    build: yarn/node_manager
+    image: mohsenasm/spark-on-yarn-cluster:node_manager.5.staging
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
+    expose:
+      - "1000-65535"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
+  datanode4:
+    build: yarn/data_node
+    image: mohsenasm/spark-on-yarn-cluster:data_node.5.staging
+    expose:
+      - 9864
+    volumes:
+      - hadoop_datanode4:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    networks:
+      - yarn_net
+    env_file:
+      - ./hadoop.env
+
 volumes:
   hadoop_namenode:
-  hadoop_datanode:
+  hadoop_datanode1:
+  hadoop_datanode2:
+  hadoop_datanode3:
+  hadoop_datanode4:
   hadoop_historyserver:
   tpc-ds-files:
   spark-history:

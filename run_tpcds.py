@@ -196,7 +196,7 @@ def copy_history():
     copy_to_host.wait()
     log("+ copy_history returned with exitcode => {exitcode}".format(exitcode=copy_to_host.returncode))
 
-run_benchmark_timeout = 5 # minutes
+run_benchmark_timeout = 45 # minutes
 
 def run_all_scales():
     pathlib.Path('output').mkdir(parents=True, exist_ok=False)
@@ -268,4 +268,4 @@ if __name__ == "__main__":
     run_all_scales_one_by_one()
 
 # run sample:
-# ADDITIONAL_SPARK_CONFIG='--num-executors 15 --executor-cores 2 --executor-memory 2G' BNCH_SPARK_SQL=false RUN_COUNT='3' QUEUE_NAMES='alpha,beta' CREATE_TABLE_QUEUE='alpha' python3 run_tpcds.py 1 2
+# ADDITIONAL_SPARK_CONFIG='--num-executors 15 --executor-cores 2 --executor-memory 2G' BNCH_SPARK_SQL=false RUN_COUNT='10' QUEUE_NAMES='alpha,beta' CREATE_TABLE_QUEUE='alpha' python3 run_tpcds.py 1 2 50 100 400
