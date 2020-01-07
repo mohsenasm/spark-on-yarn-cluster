@@ -223,7 +223,10 @@ def run_all_scales_one_by_one():
     pathlib.Path('output').mkdir(parents=True, exist_ok=False)
 
     scales = sys.argv[1:]
-    queries = [5, 19, 21, 26, 40, 52]
+
+    main_queries = [5, 19, 21, 26, 40, 52]
+    additional_queries = [i for i in range(1, 100) if i not in main_queries]
+    queries = main_queries + additional_queries
 
     print_time() # log time
     run_the_cluster(); print_time() # log time
