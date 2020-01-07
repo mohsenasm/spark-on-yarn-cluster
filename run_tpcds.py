@@ -224,9 +224,13 @@ def run_all_scales_one_by_one():
 
     scales = sys.argv[1:]
 
-    main_queries = [5, 19, 21, 26, 40, 52]
-    additional_queries = [i for i in range(1, 100) if i not in main_queries]
-    queries = main_queries + additional_queries
+    queries = [5, 19, 21, 26, 40, 52]
+    if run_all_queries:
+        additional_queries = [i for i in range(1, 100) if i not in main_queries]
+        queries = queries + additional_queries
+
+    # convert 1 to '01', 2 to '02', ...
+    queries = [q_name if len(q_name)==2 else "0"+q_name for q_name in map(str, queries)]
 
     print_time() # log time
     run_the_cluster(); print_time() # log time
@@ -258,6 +262,7 @@ def run_all_scales_one_by_one():
 docker_compose_file_name = "spark-client-with-tpcds-docker-compose.yml"
 run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compose.yml up -d"]
 run_benchmarks_with_spark_sql = (os.getenv("BNCH_SPARK_SQL", "TRUE").upper() == "TRUE")
+run_all_queries = (os.getenv("RUN_ALL_QUERIES", "False").upper() == "TRUE")
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
 use_csv_instead_of_parquet = (os.getenv("USE_CSV", "False").upper() == "TRUE") and run_benchmarks_with_spark_sql
 create_tables_queue = os.getenv("CREATE_TABLE_QUEUE", "default")
