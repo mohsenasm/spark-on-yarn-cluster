@@ -35,7 +35,7 @@ services:
     build: yarn/resource_manager
     image: mohsenasm/spark-on-yarn-cluster:resource_manager.5.staging
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864"
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864"
     ports: # maybe cause security issue
       - 8088:8088
     expose:
@@ -70,7 +70,7 @@ services:
     ports:
       - 8188:8188
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 datanode:9864 resourcemanager:8088"
+      SERVICE_PRECONDITION: "namenode:9870 datanode1:9864 resourcemanager:8088"
     volumes:
       - hadoop_historyserver:/hadoop/yarn/timeline
     networks:
