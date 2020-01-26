@@ -196,7 +196,7 @@ def copy_history():
     copy_to_host.wait()
     log("+ copy_history returned with exitcode => {exitcode}".format(exitcode=copy_to_host.returncode))
 
-run_benchmark_timeout = 5 # minutes
+run_benchmark_timeout = 45 # minutes
 
 def run_all_scales():
     pathlib.Path('output').mkdir(parents=True, exist_ok=False)
