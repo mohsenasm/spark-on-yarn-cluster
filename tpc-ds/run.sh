@@ -8,7 +8,16 @@ case "$1" in
     exit 0
     ;;
   "gen_data")
-    mkdir -p /tpc-ds-files/data/csv_${2:-1} && cd /tpcds-kit/tools && ./dsdgen -SCALE ${2:-1} -DIR /tpc-ds-files/data/csv_${2:-1}
+    set -ex
+    scale=${2:-1}
+    pcount=${3:-2}
+    mkdir -p /tpc-ds-files/data/csv_$scale && cd /tpcds-kit/tools
+    for (( i=1; i<=$pcount; i++ ))
+    do
+      ./dsdgen -SCALE $scale -DIR /tpc-ds-files/data/csv_$scale -PARALLEL $pcount -CHILD $i &
+    done
+    sleep 2
+    wait
     ;;
   "rm_data")
     rm -r /tpc-ds-files/data/csv

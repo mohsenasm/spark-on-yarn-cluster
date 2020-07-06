@@ -12,7 +12,7 @@ create table {table_name}
 {table_columns}
 )
 USING csv
-OPTIONS(header "false", delimiter "|", path "{data_path}/csv_{scale}/{table_name}.dat")
+OPTIONS(header "false", delimiter "|", path "{data_path}/csv_{scale}/{table_name}*.dat")
 ;
 
 """

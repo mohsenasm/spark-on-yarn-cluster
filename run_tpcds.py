@@ -49,7 +49,7 @@ def generate_tpc_ds_for_scales(scales):
     wait_list.append(("copy_queries", copy_queries))
 
     for scale in scales:
-        gen_data = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_data {scale}")
+        gen_data = popen_nohup_str(f"docker-compose -f {docker_compose_file_name} run tpc-ds /run.sh gen_data {scale} {gen_data_parallelism}")
         wait_list.append(("gen_data({})".format(scale), gen_data))
 
         if use_csv_instead_of_parquet:
@@ -124,7 +124,7 @@ def create_tables(scale):
         log("+ create_tables({}).mkdir_parquet retured with exitcode => {}".format(scale, mkdir.returncode))
 
         parquet = popen_nohup_str(spark_client_command
-         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}{use_csv_postfix}.sql --name create_db_scale_{scale} --queue {create_tables_queue} {additional_spark_config}'.format(scale=scale, use_csv_postfix=use_csv_postfix, create_tables_queue=create_tables_queue, additional_spark_config=additional_spark_config))
+         + '/opt/spark/bin/spark-sql --master yarn --deploy-mode client -f /tpc-ds-files/ddl/tpcds_{scale}{use_csv_postfix}.sql --name create_db_scale_{scale} --queue {create_tables_queue} {additional_spark_config_for_create_table}'.format(scale=scale, use_csv_postfix=use_csv_postfix, create_tables_queue=create_tables_queue, additional_spark_config_for_create_table=additional_spark_config_for_create_table))
         log("- create_tables({}) wating ...".format(scale))
         parquet.wait()
         log("+ create_tables({}) retured with exitcode => {}".format(scale, parquet.returncode))
@@ -264,10 +264,14 @@ run_cluster_commmands = ["docker-compose -f spark-client-with-tpcds-docker-compo
 run_benchmarks_with_spark_sql = (os.getenv("BNCH_SPARK_SQL", "TRUE").upper() == "TRUE")
 run_all_queries = (os.getenv("RUN_ALL_QUERIES", "False").upper() == "TRUE")
 additional_spark_config = os.getenv("ADDITIONAL_SPARK_CONFIG", "")
+additional_spark_config_for_create_table = os.getenv("ADDITIONAL_SPARK_CONFIG_FOR_CREATE_TABLE", "")
+if len(additional_spark_config_for_create_table) == 0: 
+    additional_spark_config_for_create_table = additional_spark_config
 use_csv_instead_of_parquet = (os.getenv("USE_CSV", "False").upper() == "TRUE") and run_benchmarks_with_spark_sql
 create_tables_queue = os.getenv("CREATE_TABLE_QUEUE", "default")
 run_count = int(os.getenv("RUN_COUNT", "1"))
 queue_names = set(os.getenv("QUEUE_NAMES", "default").split(','))
+gen_data_parallelism = set(os.getenv("GEN_DATA_PARALLELISM", "2"))
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "
