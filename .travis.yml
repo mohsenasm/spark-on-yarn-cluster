@@ -6,8 +6,8 @@ services:
 branches:
   only:
     # - nothing
-    # - master
-    - staging
+    - master
+    # - staging
     # - multiQ
 
 install:

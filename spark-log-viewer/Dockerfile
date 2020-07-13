@@ -2,6 +2,7 @@ FROM hseeberger/scala-sbt:11.0.4_1.3.2_2.13.1
 
 LABEL maintainer="m.m.asemanmanzar@gmail.com"
 
+RUN sed -i 's;http://archive.debian.org/debian/;http://deb.debian.org/debian/;' /etc/apt/sources.list
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python-pip && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python3-pip wget gcc make flex bison byacc build-essential aptitude libstdc++6 bash && rm -rf /var/lib/apt/lists/*
