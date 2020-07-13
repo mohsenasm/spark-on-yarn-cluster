@@ -271,7 +271,7 @@ use_csv_instead_of_parquet = (os.getenv("USE_CSV", "False").upper() == "TRUE") a
 create_tables_queue = os.getenv("CREATE_TABLE_QUEUE", "default")
 run_count = int(os.getenv("RUN_COUNT", "1"))
 queue_names = set(os.getenv("QUEUE_NAMES", "default").split(','))
-gen_data_parallelism = set(os.getenv("GEN_DATA_PARALLELISM", "2"))
+gen_data_parallelism = os.getenv("GEN_DATA_PARALLELISM", "2")
 
 def get_spark_client_command():
     return f"docker-compose -f {docker_compose_file_name} run spark-client "
