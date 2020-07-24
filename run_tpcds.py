@@ -249,6 +249,7 @@ def run_all_scales_one_by_one():
                 threads.append(threading.Thread(target=run_benchmark, kwargs={"query": query, "scale": scale, "queue": queue}))
             for t in threads:
                 t.start()
+            for t in threads:
                 t.join()
             print_time() # log time
         copy_history(); print_time() # log time
