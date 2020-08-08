@@ -1,4 +1,3 @@
--- start query 78 in stream 0 using template query78.tpl and seed QUALIFICATION
 with ws as
   (select d_year AS ws_sold_year, ws_item_sk,
     ws_bill_customer_sk ws_customer_sk,
@@ -53,5 +52,4 @@ order by
   other_chan_wholesale_cost,
   other_chan_sales_price,
   round(ss_qty/(coalesce(ws_qty+cs_qty,1)),2)
- limit 100;
--- end query 78 in stream 0 using template query78.tpl
+ limit 100

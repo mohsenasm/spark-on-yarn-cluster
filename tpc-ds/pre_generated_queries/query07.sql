@@ -1,4 +1,3 @@
--- start query 7 in stream 0 using template query7.tpl and seed QUALIFICATION
   select  i_item_id, 
         avg(ss_quantity) agg1,
         avg(ss_list_price) agg2,
@@ -16,5 +15,4 @@
        d_year = 2000 
  group by i_item_id
  order by i_item_id
-  limit 100;
--- end query 7 in stream 0 using template query7.tpl
+  limit 100

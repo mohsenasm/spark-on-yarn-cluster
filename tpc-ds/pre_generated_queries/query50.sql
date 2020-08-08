@@ -1,4 +1,3 @@
--- start query 50 in stream 0 using template query50.tpl and seed QUALIFICATION
  select  
    s_store_name
   ,s_company_id
@@ -54,5 +53,4 @@ order by s_store_name
         ,s_county
         ,s_state
         ,s_zip
- limit 100;
--- end query 50 in stream 0 using template query50.tpl
+ limit 100

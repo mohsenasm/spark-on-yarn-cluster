@@ -1,4 +1,3 @@
--- start query 53 in stream 0 using template query53.tpl and seed QUALIFICATION
  select  * from 
 (select i_manufact_id,
 sum(ss_sales_price) sum_sales,
@@ -23,5 +22,4 @@ where case when avg_quarterly_sales > 0
 order by avg_quarterly_sales,
 	 sum_sales,
 	 i_manufact_id
- limit 100;
--- end query 53 in stream 0 using template query53.tpl
+ limit 100

@@ -1,4 +1,3 @@
--- start query 28 in stream 0 using template query28.tpl and seed QUALIFICATION
  select  *
 from (select avg(ss_list_price) B1_LP
             ,count(ss_list_price) B1_CNT
@@ -48,5 +47,4 @@ from (select avg(ss_list_price) B1_LP
         and (ss_list_price between 154 and 154+10
           or ss_coupon_amt between 7326 and 7326+1000
           or ss_wholesale_cost between 7 and 7+20)) B6
- limit 100;
--- end query 28 in stream 0 using template query28.tpl
+ limit 100

@@ -1,4 +1,3 @@
--- start query 8 in stream 0 using template query8.tpl and seed QUALIFICATION
   select  s_store_name
       ,sum(ss_net_profit)
  from store_sales
@@ -103,5 +102,4 @@
   and (substr(s_zip,1,2) = substr(V1.ca_zip,1,2))
  group by s_store_name
  order by s_store_name
-  limit 100;
--- end query 8 in stream 0 using template query8.tpl
+  limit 100

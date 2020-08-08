@@ -1,4 +1,3 @@
--- start query 23 in stream 0 using template query23.tpl and seed QUALIFICATION
  with frequent_ss_items as 
  (select substr(i_item_desc,1,30) itemdesc,i_item_sk item_sk,d_date solddate,count(*) cnt
   from store_sales
@@ -102,5 +101,4 @@ from
          and ws_bill_customer_sk = c_customer_sk
        group by c_last_name,c_first_name) 
      order by c_last_name,c_first_name,sales
-   limit 100;
--- end query 23 in stream 0 using template query23.tpl
+   limit 100

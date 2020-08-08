@@ -1,4 +1,3 @@
--- start query 9 in stream 0 using template query9.tpl and seed QUALIFICATION
 select case when (select count(*) 
                   from store_sales 
                   where ss_quantity between 1 and 20) > 74129
@@ -46,5 +45,3 @@ select case when (select count(*)
                   where ss_quantity between 81 and 100) end bucket5
 from reason
 where r_reason_sk = 1
-;
--- end query 9 in stream 0 using template query9.tpl

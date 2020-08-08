@@ -1,4 +1,3 @@
--- start query 83 in stream 0 using template query83.tpl and seed QUALIFICATION
  with sr_items as
  (select i_item_id item_id,
         sum(sr_return_quantity) sr_item_qty
@@ -62,5 +61,4 @@
    and sr_items.item_id=wr_items.item_id 
  order by sr_items.item_id
          ,sr_item_qty
-  limit 100;
--- end query 83 in stream 0 using template query83.tpl
+  limit 100

@@ -1,4 +1,3 @@
--- start query 3 in stream 0 using template query3.tpl and seed QUALIFICATION
   select  dt.d_year 
        ,item.i_brand_id brand_id 
        ,item.i_brand brand
@@ -16,5 +15,4 @@
  order by dt.d_year
          ,sum_agg desc
          ,brand_id
-  limit 100;
--- end query 3 in stream 0 using template query3.tpl
+  limit 100

@@ -1,4 +1,3 @@
--- start query 14 in stream 0 using template query14.tpl and seed QUALIFICATION
 with  cross_items as
  (select i_item_sk ss_item_sk
  from item,
@@ -193,5 +192,4 @@ with  cross_items as
    and this_year.i_class_id = last_year.i_class_id_2
    and this_year.i_category_id = last_year.i_category_id_2
  order by this_year.channel, this_year.i_brand_id, this_year.i_class_id, this_year.i_category_id
-  limit 100;
--- end query 14 in stream 0 using template query14.tpl
+  limit 100

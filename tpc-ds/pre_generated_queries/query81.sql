@@ -1,4 +1,3 @@
--- start query 81 in stream 0 using template query81.tpl and seed QUALIFICATION
  with customer_total_return as
  (select cr_returning_customer_sk as ctr_customer_sk
         ,ca_state as ctr_state, 
@@ -26,5 +25,4 @@
  order by c_customer_id,c_salutation,c_first_name,c_last_name,ca_street_number,ca_street_name
                    ,ca_street_type,ca_suite_number,ca_city,ca_county,ca_state,ca_zip,ca_country,ca_gmt_offset
                   ,ca_location_type,ctr_total_return
-  limit 100;
--- end query 81 in stream 0 using template query81.tpl
+  limit 100

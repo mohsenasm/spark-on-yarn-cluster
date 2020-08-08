@@ -1,4 +1,3 @@
--- start query 99 in stream 0 using template query99.tpl and seed QUALIFICATION
  select  
    substr(w_warehouse_name,1,20)
   ,sm_type
@@ -30,5 +29,4 @@ group by
 order by substr(w_warehouse_name,1,20)
         ,sm_type
         ,cc_name
- limit 100;
--- end query 99 in stream 0 using template query99.tpl
+ limit 100

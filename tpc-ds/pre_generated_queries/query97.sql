@@ -1,4 +1,3 @@
--- start query 97 in stream 0 using template query97.tpl and seed QUALIFICATION
 with ssci as (
 select ss_customer_sk customer_sk
       ,ss_item_sk item_sk
@@ -20,5 +19,4 @@ group by cs_bill_customer_sk
       ,sum(case when ssci.customer_sk is not null and csci.customer_sk is not null then 1 else 0 end) store_and_catalog
 from ssci full outer join csci on (ssci.customer_sk=csci.customer_sk
                                and ssci.item_sk = csci.item_sk)
- limit 100;
--- end query 97 in stream 0 using template query97.tpl
+ limit 100

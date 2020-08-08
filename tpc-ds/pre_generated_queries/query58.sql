@@ -1,4 +1,3 @@
--- start query 58 in stream 0 using template query58.tpl and seed QUALIFICATION
  with ss_items as
  (select i_item_id item_id
         ,sum(ss_ext_sales_price) ss_item_rev 
@@ -60,5 +59,4 @@
    and ws_item_rev between 0.9 * cs_item_rev and 1.1 * cs_item_rev
  order by item_id
          ,ss_item_rev
-  limit 100;
--- end query 58 in stream 0 using template query58.tpl
+  limit 100

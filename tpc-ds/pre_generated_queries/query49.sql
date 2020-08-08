@@ -1,4 +1,3 @@
--- start query 49 in stream 0 using template query49.tpl and seed QUALIFICATION
   select  
  'web' as channel
  ,web.item
@@ -122,5 +121,4 @@
  store.currency_rank <= 10
  )
  order by 1,4,5
-  limit 100;
--- end query 49 in stream 0 using template query49.tpl
+  limit 100

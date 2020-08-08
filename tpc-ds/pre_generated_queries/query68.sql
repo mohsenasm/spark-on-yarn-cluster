@@ -1,4 +1,3 @@
--- start query 68 in stream 0 using template query68.tpl and seed QUALIFICATION
   select  c_last_name
        ,c_first_name
        ,ca_city
@@ -37,5 +36,4 @@
    and current_addr.ca_city <> bought_city
  order by c_last_name
          ,ss_ticket_number
-  limit 100;
--- end query 68 in stream 0 using template query68.tpl
+  limit 100

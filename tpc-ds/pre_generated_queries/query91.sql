@@ -1,4 +1,3 @@
--- start query 91 in stream 0 using template query91.tpl and seed QUALIFICATION
 select  
         cc_call_center_id Call_Center,
         cc_name Call_Center_Name,
@@ -26,5 +25,4 @@ and     ( (cd_marital_status       = 'M' and cd_education_status     = 'Unknown'
 and     hd_buy_potential like 'Unknown%'
 and     ca_gmt_offset           = -7
 group by cc_call_center_id,cc_name,cc_manager,cd_marital_status,cd_education_status
-order by sum(cr_net_loss) desc;
--- end query 91 in stream 0 using template query91.tpl
+order by sum(cr_net_loss) desc

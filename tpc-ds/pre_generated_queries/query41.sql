@@ -1,4 +1,3 @@
--- start query 41 in stream 0 using template query41.tpl and seed QUALIFICATION
   select  distinct(i_product_name)
  from item i1
  where i_manufact_id between 738 and 738+40 
@@ -47,5 +46,4 @@
         (i_size = 'medium' or i_size = 'extra large')
         )))) > 0
  order by i_product_name
-  limit 100;
--- end query 41 in stream 0 using template query41.tpl
+  limit 100

@@ -1,4 +1,3 @@
--- start query 66 in stream 0 using template query66.tpl and seed QUALIFICATION
   select   
          w_warehouse_name
  	,w_warehouse_sq_ft
@@ -215,5 +214,4 @@
  	,ship_carriers
        ,year
  order by w_warehouse_name
-  limit 100;
--- end query 66 in stream 0 using template query66.tpl
+  limit 100

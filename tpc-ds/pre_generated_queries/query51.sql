@@ -1,4 +1,3 @@
--- start query 51 in stream 0 using template query51.tpl and seed QUALIFICATION
 WITH web_v1 as (
 select
   ws_item_sk item_sk, d_date,
@@ -40,5 +39,4 @@ from (select item_sk
 where web_cumulative > store_cumulative
 order by item_sk
         ,d_date
- limit 100;
--- end query 51 in stream 0 using template query51.tpl
+ limit 100

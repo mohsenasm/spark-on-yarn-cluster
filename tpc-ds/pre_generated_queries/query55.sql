@@ -1,4 +1,3 @@
--- start query 55 in stream 0 using template query55.tpl and seed QUALIFICATION
   select  i_brand_id brand_id, i_brand brand,
  	sum(ss_ext_sales_price) ext_price
  from date_dim, store_sales, item
@@ -9,5 +8,4 @@
  	and d_year=1999
  group by i_brand, i_brand_id
  order by ext_price desc, i_brand_id
- limit 100 ;
--- end query 55 in stream 0 using template query55.tpl
+ limit 100

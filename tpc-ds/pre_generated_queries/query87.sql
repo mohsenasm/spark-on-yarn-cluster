@@ -1,4 +1,3 @@
--- start query 87 in stream 0 using template query87.tpl and seed QUALIFICATION
 select count(*) 
 from ((select distinct c_last_name, c_first_name, d_date
        from store_sales, date_dim, customer
@@ -18,5 +17,3 @@ from ((select distinct c_last_name, c_first_name, d_date
          and web_sales.ws_bill_customer_sk = customer.c_customer_sk
          and d_month_seq between 1200 and 1200+11)
 ) cool_cust
-;
--- end query 87 in stream 0 using template query87.tpl

@@ -1,4 +1,3 @@
--- start query 90 in stream 0 using template query90.tpl and seed QUALIFICATION
   select  cast(amc as decimal(15,4))/cast(pmc as decimal(15,4)) am_pm_ratio
  from ( select count(*) amc
        from web_sales, household_demographics , time_dim, web_page
@@ -17,5 +16,4 @@
          and household_demographics.hd_dep_count = 6
          and web_page.wp_char_count between 5000 and 5200) pt
  order by am_pm_ratio
-  limit 100;
--- end query 90 in stream 0 using template query90.tpl
+  limit 100

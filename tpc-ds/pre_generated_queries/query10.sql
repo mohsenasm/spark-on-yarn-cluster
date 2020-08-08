@@ -1,4 +1,3 @@
--- start query 10 in stream 0 using template query10.tpl and seed QUALIFICATION
   select  
   cd_gender,
   cd_marital_status,
@@ -54,5 +53,4 @@
           cd_dep_count,
           cd_dep_employed_count,
           cd_dep_college_count
- limit 100;
--- end query 10 in stream 0 using template query10.tpl
+ limit 100

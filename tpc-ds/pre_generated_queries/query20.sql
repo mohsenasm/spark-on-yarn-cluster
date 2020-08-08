@@ -1,4 +1,3 @@
--- start query 20 in stream 0 using template query20.tpl and seed QUALIFICATION
   select  i_item_id
        ,i_item_desc 
        ,i_category 
@@ -25,5 +24,4 @@
          ,i_item_id
          ,i_item_desc
          ,revenueratio
- limit 100;
--- end query 20 in stream 0 using template query20.tpl
+ limit 100

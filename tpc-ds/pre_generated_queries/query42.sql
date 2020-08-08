@@ -1,4 +1,3 @@
--- start query 42 in stream 0 using template query42.tpl and seed QUALIFICATION
   select  dt.d_year
  	,item.i_category_id
  	,item.i_category
@@ -17,5 +16,4 @@
  order by       sum(ss_ext_sales_price) desc,dt.d_year
  		,item.i_category_id
  		,item.i_category
- limit 100 ;
--- end query 42 in stream 0 using template query42.tpl
+ limit 100

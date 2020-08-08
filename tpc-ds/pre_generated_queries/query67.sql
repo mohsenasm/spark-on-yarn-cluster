@@ -1,4 +1,3 @@
--- start query 67 in stream 0 using template query67.tpl and seed QUALIFICATION
  select  *
 from (select i_category
             ,i_class
@@ -39,5 +38,4 @@ order by i_category
         ,s_store_id
         ,sumsales
         ,rk
- limit 100;
--- end query 67 in stream 0 using template query67.tpl
+ limit 100

@@ -1,4 +1,3 @@
--- start query 36 in stream 0 using template query36.tpl and seed QUALIFICATION
   select  
     sum(ss_net_profit)/sum(ss_ext_sales_price) as gross_margin
    ,i_category
@@ -25,5 +24,4 @@
    lochierarchy desc
   ,case when lochierarchy = 0 then i_category end
   ,rank_within_parent
-   limit 100;
--- end query 36 in stream 0 using template query36.tpl
+   limit 100

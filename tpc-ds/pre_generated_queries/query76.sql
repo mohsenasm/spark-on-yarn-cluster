@@ -1,4 +1,3 @@
--- start query 76 in stream 0 using template query76.tpl and seed QUALIFICATION
  select  channel, col_name, d_year, d_qoy, i_category, COUNT(*) sales_cnt, SUM(ext_sales_price) sales_amt FROM (
         SELECT 'store' as channel, 'ss_store_sk' col_name, d_year, d_qoy, i_category, ss_ext_sales_price ext_sales_price
          FROM store_sales, item, date_dim
@@ -19,5 +18,4 @@
            AND cs_item_sk=i_item_sk) foo
 GROUP BY channel, col_name, d_year, d_qoy, i_category
 ORDER BY channel, col_name, d_year, d_qoy, i_category
- limit 100;
--- end query 76 in stream 0 using template query76.tpl
+ limit 100

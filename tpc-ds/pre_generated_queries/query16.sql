@@ -1,4 +1,3 @@
--- start query 16 in stream 0 using template query16.tpl and seed QUALIFICATION
  select  
    count(distinct cs_order_number) as order_count
   ,sum(cs_ext_ship_cost) as total_shipping_cost
@@ -26,5 +25,4 @@ and not exists(select *
                from catalog_returns cr1
                where cs1.cs_order_number = cr1.cr_order_number)
 order by count(distinct cs_order_number)
- limit 100;
--- end query 16 in stream 0 using template query16.tpl
+ limit 100

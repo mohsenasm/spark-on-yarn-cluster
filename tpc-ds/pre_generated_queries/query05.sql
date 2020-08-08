@@ -1,4 +1,3 @@
--- start query 5 in stream 0 using template query5.tpl and seed QUALIFICATION
  with ssr as
  (select s_store_id,
         sum(sales_price) as sales,
@@ -123,5 +122,4 @@
  group by rollup (channel, id)
  order by channel
          ,id
-  limit 100;
--- end query 5 in stream 0 using template query5.tpl
+  limit 100

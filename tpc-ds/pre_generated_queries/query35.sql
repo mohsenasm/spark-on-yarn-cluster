@@ -1,4 +1,3 @@
--- start query 35 in stream 0 using template query35.tpl and seed QUALIFICATION
   select   
   ca_state,
   cd_gender,
@@ -53,5 +52,4 @@
           cd_dep_count,
           cd_dep_employed_count,
           cd_dep_college_count
-  limit 100;
--- end query 35 in stream 0 using template query35.tpl
+  limit 100

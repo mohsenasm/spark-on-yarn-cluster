@@ -1,4 +1,3 @@
--- start query 48 in stream 0 using template query48.tpl and seed QUALIFICATION
  select sum (ss_quantity)
  from store_sales, store, customer_demographics, customer_address, date_dim
  where s_store_sk = ss_store_sk
@@ -62,5 +61,3 @@
   and ss_net_profit between 50 and 25000 
   )
  )
-;
--- end query 48 in stream 0 using template query48.tpl

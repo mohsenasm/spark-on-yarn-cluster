@@ -1,4 +1,3 @@
--- start query 70 in stream 0 using template query70.tpl and seed QUALIFICATION
   select  
     sum(ss_net_profit) as total_sum
    ,s_state
@@ -33,5 +32,4 @@
    lochierarchy desc
   ,case when lochierarchy = 0 then s_state end
   ,rank_within_parent
-  limit 100;
--- end query 70 in stream 0 using template query70.tpl
+  limit 100

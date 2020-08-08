@@ -1,4 +1,3 @@
--- start query 92 in stream 0 using template query92.tpl and seed QUALIFICATION
  select  
    sum(ws_ext_discount_amt)  as Excess_Discount_Amount 
 from 
@@ -25,5 +24,4 @@ and ws_ext_discount_amt
           and d_date_sk = ws_sold_date_sk 
       ) 
 order by sum(ws_ext_discount_amt)
- limit 100;
--- end query 92 in stream 0 using template query92.tpl
+ limit 100

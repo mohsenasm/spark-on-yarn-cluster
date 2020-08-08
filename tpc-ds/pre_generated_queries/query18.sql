@@ -1,4 +1,3 @@
--- start query 18 in stream 0 using template query18.tpl and seed QUALIFICATION
   select  i_item_id,
         ca_country,
         ca_state, 
@@ -29,5 +28,4 @@
         ca_state, 
         ca_county,
 	i_item_id
-  limit 100;
--- end query 18 in stream 0 using template query18.tpl
+  limit 100

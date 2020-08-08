@@ -1,4 +1,3 @@
--- start query 15 in stream 0 using template query15.tpl and seed QUALIFICATION
   select  ca_zip
        ,sum(cs_sales_price)
  from catalog_sales
@@ -15,5 +14,4 @@
  	and d_qoy = 2 and d_year = 2001
  group by ca_zip
  order by ca_zip
-  limit 100;
--- end query 15 in stream 0 using template query15.tpl
+  limit 100

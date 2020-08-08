@@ -1,4 +1,3 @@
--- start query 46 in stream 0 using template query46.tpl and seed QUALIFICATION
   select  c_last_name
        ,c_first_name
        ,ca_city
@@ -30,5 +29,4 @@
           ,ca_city
           ,bought_city
           ,ss_ticket_number
-   limit 100;
--- end query 46 in stream 0 using template query46.tpl
+   limit 100

@@ -1,4 +1,3 @@
--- start query 88 in stream 0 using template query88.tpl and seed QUALIFICATION
 select  *
 from
  (select count(*) h8_30_to_9
@@ -89,5 +88,3 @@ from
           (household_demographics.hd_dep_count = 2 and household_demographics.hd_vehicle_count<=2+2) or
           (household_demographics.hd_dep_count = 0 and household_demographics.hd_vehicle_count<=0+2))
      and store.s_store_name = 'ese') s8
-;
--- end query 88 in stream 0 using template query88.tpl

@@ -1,4 +1,3 @@
--- start query 86 in stream 0 using template query86.tpl and seed QUALIFICATION
   select   
     sum(ws_net_paid) as total_sum
    ,i_category
@@ -21,5 +20,4 @@
    lochierarchy desc,
    case when lochierarchy = 0 then i_category end,
    rank_within_parent
-  limit 100;
--- end query 86 in stream 0 using template query86.tpl
+  limit 100

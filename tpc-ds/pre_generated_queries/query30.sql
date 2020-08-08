@@ -1,4 +1,3 @@
--- start query 30 in stream 0 using template query30.tpl and seed QUALIFICATION
  with customer_total_return as
  (select wr_returning_customer_sk as ctr_customer_sk
         ,ca_state as ctr_state, 
@@ -26,5 +25,4 @@
  order by c_customer_id,c_salutation,c_first_name,c_last_name,c_preferred_cust_flag
                   ,c_birth_day,c_birth_month,c_birth_year,c_birth_country,c_login,c_email_address
                   ,c_last_review_date,ctr_total_return
- limit 100;
--- end query 30 in stream 0 using template query30.tpl
+ limit 100

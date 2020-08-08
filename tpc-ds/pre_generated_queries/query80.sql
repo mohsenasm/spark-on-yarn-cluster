@@ -1,4 +1,3 @@
--- start query 80 in stream 0 using template query80.tpl and seed QUALIFICATION
  with ssr as
  (select  s_store_id as store_id,
           sum(ss_ext_sales_price) as sales,
@@ -91,5 +90,4 @@ group by web_site_id)
  group by rollup (channel, id)
  order by channel
          ,id
-  limit 100;
--- end query 80 in stream 0 using template query80.tpl
+  limit 100

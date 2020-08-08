@@ -1,4 +1,3 @@
--- start query 60 in stream 0 using template query60.tpl and seed QUALIFICATION
  with ss as (
  select
           i_item_id,sum(ss_ext_sales_price) total_sales
@@ -73,5 +72,4 @@ where i_category in ('Music'))
  group by i_item_id
  order by i_item_id
       ,total_sales
-  limit 100;
--- end query 60 in stream 0 using template query60.tpl
+  limit 100

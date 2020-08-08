@@ -1,4 +1,3 @@
--- start query 64 in stream 0 using template query64.tpl and seed QUALIFICATION
 with cs_ui as
  (select cs_item_sk
         ,sum(cs_ext_list_price) as sale,sum(cr_refunded_cash+cr_reversed_charge+cr_store_credit) as refund
@@ -114,5 +113,4 @@ where cs1.item_sk=cs2.item_sk and
      cs1.store_zip = cs2.store_zip
 order by cs1.product_name
        ,cs1.store_name
-       ,cnt_2;
--- end query 64 in stream 0 using template query64.tpl
+       ,cnt_2

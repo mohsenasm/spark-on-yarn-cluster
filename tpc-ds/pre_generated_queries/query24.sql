@@ -1,4 +1,3 @@
--- start query 24 in stream 0 using template query24.tpl and seed QUALIFICATION
 with ssales as
 (select c_last_name
       ,c_first_name
@@ -102,5 +101,3 @@ having sum(netpaid) > (select 0.05*avg(netpaid)
 order by c_last_name
         ,c_first_name
         ,s_store_name
-;
--- end query 24 in stream 0 using template query24.tpl

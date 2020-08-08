@@ -1,4 +1,3 @@
--- start query 12 in stream 0 using template query12.tpl and seed QUALIFICATION
  select  i_item_id
       ,i_item_desc 
       ,i_category 
@@ -29,5 +28,4 @@ order by
         ,i_item_id
         ,i_item_desc
         ,revenueratio
- limit 100;
--- end query 12 in stream 0 using template query12.tpl
+ limit 100

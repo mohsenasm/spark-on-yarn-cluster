@@ -1,4 +1,3 @@
--- start query 65 in stream 0 using template query65.tpl and seed QUALIFICATION
   select 
 	s_store_name,
 	i_item_desc,
@@ -24,5 +23,4 @@
        s_store_sk = sc.ss_store_sk and
        i_item_sk = sc.ss_item_sk
  order by s_store_name, i_item_desc
- limit 100;
--- end query 65 in stream 0 using template query65.tpl
+ limit 100

@@ -1,4 +1,3 @@
--- start query 93 in stream 0 using template query93.tpl and seed QUALIFICATION
  select  ss_customer_sk
             ,sum(act_sales) sumsales
       from (select ss_item_sk
@@ -13,5 +12,4 @@
               and r_reason_desc = 'reason 28') t
       group by ss_customer_sk
       order by sumsales, ss_customer_sk
- limit 100;
--- end query 93 in stream 0 using template query93.tpl
+ limit 100

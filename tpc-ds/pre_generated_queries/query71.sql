@@ -1,4 +1,3 @@
--- start query 71 in stream 0 using template query71.tpl and seed QUALIFICATION
  select i_brand_id brand_id, i_brand brand,t_hour,t_minute,
  	sum(ext_price) ext_price
  from item, (select ws_ext_sales_price as ext_price, 
@@ -35,5 +34,3 @@
    and (t_meal_time = 'breakfast' or t_meal_time = 'dinner')
  group by i_brand, i_brand_id,t_hour,t_minute
  order by ext_price desc, i_brand_id
- ;
--- end query 71 in stream 0 using template query71.tpl

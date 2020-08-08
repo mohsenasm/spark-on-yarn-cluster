@@ -1,4 +1,3 @@
--- start query 45 in stream 0 using template query45.tpl and seed QUALIFICATION
   select  ca_zip, ca_city, sum(ws_sales_price)
  from web_sales, customer, customer_address, date_dim, item
  where ws_bill_customer_sk = c_customer_sk
@@ -15,5 +14,4 @@
  	and d_qoy = 2 and d_year = 2001
  group by ca_zip, ca_city
  order by ca_zip, ca_city
-  limit 100;
--- end query 45 in stream 0 using template query45.tpl
+  limit 100

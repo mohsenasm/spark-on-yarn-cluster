@@ -1,4 +1,3 @@
--- start query 34 in stream 0 using template query34.tpl and seed QUALIFICATION
  select c_last_name
        ,c_first_name
        ,c_salutation
@@ -26,5 +25,4 @@
     group by ss_ticket_number,ss_customer_sk) dn,customer
     where ss_customer_sk = c_customer_sk
       and cnt between 15 and 20
-    order by c_last_name,c_first_name,c_salutation,c_preferred_cust_flag desc, ss_ticket_number;
--- end query 34 in stream 0 using template query34.tpl
+    order by c_last_name,c_first_name,c_salutation,c_preferred_cust_flag desc, ss_ticket_number

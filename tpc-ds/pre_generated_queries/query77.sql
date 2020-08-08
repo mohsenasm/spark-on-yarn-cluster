@@ -1,4 +1,3 @@
--- start query 77 in stream 0 using template query77.tpl and seed QUALIFICATION
  with ss as
  (select s_store_sk,
          sum(ss_ext_sales_price) as sales,
@@ -103,5 +102,4 @@
  group by rollup (channel, id)
  order by channel
          ,id
-  limit 100;
--- end query 77 in stream 0 using template query77.tpl
+  limit 100

@@ -1,4 +1,3 @@
--- start query 25 in stream 0 using template query25.tpl and seed QUALIFICATION
   select  
  i_item_id
  ,i_item_desc
@@ -43,5 +42,4 @@
  ,i_item_desc
  ,s_store_id
  ,s_store_name
-  limit 100;
--- end query 25 in stream 0 using template query25.tpl
+  limit 100

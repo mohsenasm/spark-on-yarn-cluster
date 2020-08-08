@@ -1,4 +1,3 @@
--- start query 27 in stream 0 using template query27.tpl and seed QUALIFICATION
   select  i_item_id,
         s_state, grouping(s_state) g_state,
         avg(ss_quantity) agg1,
@@ -18,5 +17,4 @@
  group by rollup (i_item_id, s_state)
  order by i_item_id
          ,s_state
-  limit 100;
--- end query 27 in stream 0 using template query27.tpl
+  limit 100

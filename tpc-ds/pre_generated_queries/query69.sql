@@ -1,4 +1,3 @@
--- start query 69 in stream 0 using template query69.tpl and seed QUALIFICATION
   select  
   cd_gender,
   cd_marital_status,
@@ -42,5 +41,4 @@
           cd_education_status,
           cd_purchase_estimate,
           cd_credit_rating
-  limit 100;
--- end query 69 in stream 0 using template query69.tpl
+  limit 100
