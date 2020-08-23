@@ -2,10 +2,6 @@
 
 [![Docker Build Status](https://travis-ci.org/mohsenasm/spark-on-yarn-cluster.svg?branch=master)](https://travis-ci.org/mohsenasm/spark-on-yarn-cluster)
 
-## 0. Disclaimer
-
-This is a work-in-progress project. (WIP)
-
 ## 1. Test Yarn+HDFS with Wordcount
 
 1. First run the cluster and go into the resourcemanager container:  
