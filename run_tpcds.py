@@ -226,7 +226,7 @@ def run_all_scales_one_by_one():
 
     queries = [5, 19, 21, 26, 40, 52]
     if run_all_queries:
-        additional_queries = [i for i in range(1, 100) if i not in main_queries]
+        additional_queries = [i for i in range(1, 100) if i not in queries]
         queries = queries + additional_queries
 
     # convert 1 to '01', 2 to '02', ...
