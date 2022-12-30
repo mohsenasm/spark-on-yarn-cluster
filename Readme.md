@@ -2,6 +2,10 @@
 
 [![Docker Build Status](https://travis-ci.org/mohsenasm/spark-on-yarn-cluster.svg?branch=master)](https://travis-ci.org/mohsenasm/spark-on-yarn-cluster)
 
+This repo is used in the publication: 
+
+M. M. Aseman-Manzar, S. Karimian-Aliabadi, R. Entezari-Maleki, B. Egger and A. Movaghar, "Cost-aware Resource Recommendation for DAG-based Big Data Workflows: An Apache Spark Case Study," in IEEE Transactions on Services Computing, 2022, doi: 10.1109/TSC.2022.3203010. https://ieeexplore.ieee.org/abstract/document/9894699
+
 ## 1. Test Yarn+HDFS with Wordcount
 
 1. First run the cluster and go into the resourcemanager container:  
