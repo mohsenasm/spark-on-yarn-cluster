@@ -4,7 +4,7 @@
 
 This repo is used in this publication: 
 
-M. M. Aseman-Manzar, S. Karimian-Aliabadi, R. Entezari-Maleki, B. Egger and A. Movaghar, "Cost-aware Resource Recommendation for DAG-based Big Data Workflows: An Apache Spark Case Study," in IEEE Transactions on Services Computing, 2022, doi: 10.1109/TSC.2022.3203010. https://ieeexplore.ieee.org/abstract/document/9894699
+> M. M. Aseman-Manzar, S. Karimian-Aliabadi, R. Entezari-Maleki, B. Egger and A. Movaghar, "Cost-Aware Resource Recommendation for DAG-Based Big Data Workflows: An Apache Spark Case Study," in IEEE Transactions on Services Computing, vol. 16, no. 3, pp. 1726-1737, 1 May-June 2023, doi: 10.1109/TSC.2022.3203010. https://ieeexplore.ieee.org/abstract/document/9894699
 
 I also have another repo which is helpful for parsing the history logs:
 
